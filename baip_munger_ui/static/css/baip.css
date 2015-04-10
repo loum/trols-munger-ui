@@ -1,0 +1,11 @@
+/* BAIP custom CSS
+ */
+#baip-row {
+    display: table;
+}
+
+#baip-row .panel {
+    float: none;
+    display: table-cell;
+    vertical-align: middle;
+}

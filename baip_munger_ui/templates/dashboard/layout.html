@@ -1,0 +1,78 @@
+        {% extends "layout.html" %}
+        {% set title = 'Dashboard' %}
+        {% block content %}
+        <div class="col-sm-9
+                    col-sm-offset-3
+                    col-md-10
+                    col-md-offset-2
+                    main">
+          {% block steps %}
+          <h2 class="page-header">Dashboard</h2>
+
+          <div class="row placeholders">
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <a href="/munger/upload">
+                <img data-src="holder.js/100x100/text:Upload files/sky"
+                     class="img-responsive"
+                     alt="Upload files">
+              </a>
+              <h4>Step 1</h4>
+              <span class="text-muted">Upload files</span>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img data-src="holder.js/100x100/text:Configuration/vine"
+                   class="img-responsive"
+                   alt="Configuration">
+              <h4>Step 2</h4>
+              <span class="text-muted">Configuration</span>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img data-src="holder.js/100x100/text:Munge/sky"
+                   class="img-responsive"
+                   alt="Munge">
+              <h4>Step 3</h4>
+              <span class="text-muted">Munge</span>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img data-src="holder.js/100x100/text:Download files/vine"
+                   class="img-responsive"
+                   alt="Download files">
+              <h4>Step 4</h4>
+              <span class="text-muted">Download files</span>
+            </div>
+          </div>
+          {% endblock steps %}
+
+          {% block pending %}
+          <h3 class="sub-header">Pending munge</h3>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Header</th>
+                  <th>Header</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1,001</td>
+                  <td>Lorem</td>
+                  <td>ipsum</td>
+                </tr>
+                <tr>
+                  <td>1,002</td>
+                  <td>amet</td>
+                  <td>consectetur</td>
+                </tr>
+                <tr>
+                  <td>1,003</td>
+                  <td>Integer</td>
+                  <td>nec</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          {% endblock pending %}
+        </div>
+        {% endblock content %}

@@ -10,15 +10,17 @@
     -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
+    <link rel="icon" href="/static/favicon.ico">
 
-    <title>BAIP Munger Dashboard</title>
+    <title>BAIP Munger | {{ title }}</title>
 
     <!-- Bootstrap core CSS -->
     <link href="/static/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
+    <link href="/static/css/baip.css" rel="stylesheet">
     <link href="/static/css/dashboard.css" rel="stylesheet">
+    <link href="/static/css/sticky-footer-navbar.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -42,13 +44,10 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">BAIP Munger</a>
+          <a class="navbar-brand" href="/munger/dashboard">BAIP Munger</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#">Settings</a></li>
-            <li><a href="#">Profile</a></li>
             <li><a href="#">Help</a></li>
           </ul>
           <form class="navbar-form navbar-right">
@@ -66,75 +65,21 @@
                 <a href="#">Overview <span class="sr-only">(current)</span>
                 </a>
             </li>
-            <li><a href="#">Reports</a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li><a href="/munger/dashboard">Dashboard</a></li>
+            <li><a href="/munger/upload">Upload file</a></li>
           </ul>
         </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Dashboard</h1>
-
-          <div class="row placeholders">
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img data-src="holder.js/100x100/auto/sky"
-                   class="img-responsive"
-                   alt="Upload files">
-              <h4>Step 1</h4>
-              <span class="text-muted">Upload files</span>
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img data-src="holder.js/100x100/auto/vine"
-                   class="img-responsive"
-                   alt="Configuration">
-              <h4>Step 2</h4>
-              <span class="text-muted">Configuration</span>
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img data-src="holder.js/100x100/auto/sky"
-                   class="img-responsive"
-                   alt="Munge">
-              <h4>Step 3</h4>
-              <span class="text-muted">Munge</span>
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img data-src="holder.js/100x100/auto/vine"
-                   class="img-responsive"
-                   alt="Download files">
-              <h4>Step 4</h4>
-              <span class="text-muted">Download files</span>
-            </div>
-          </div>
-
-          <h2 class="sub-header">Pending munge</h2>
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1,001</td>
-                  <td>Lorem</td>
-                  <td>ipsum</td>
-                </tr>
-                <tr>
-                  <td>1,002</td>
-                  <td>amet</td>
-                  <td>consectetur</td>
-                </tr>
-                <tr>
-                  <td>1,003</td>
-                  <td>Integer</td>
-                  <td>nec</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+        {% block content %}{% endblock content %}
       </div>
     </div>
+
+    <footer class="footer">
+      <div class="container">
+        <p class="text-muted">BAIP Munger</p>
+      </div>
+    </footer>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
@@ -143,6 +88,7 @@
     <script src="/static/dist/js/bootstrap.min.js"></script>
     <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
     <script src="/static/assets/js/vendor/holder.js"></script>
+    <script src="/static/assets/js/vendor/bootstrap-filestyle.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="/static/assets/js/ie10-viewport-bug-workaround.js"></script>
   </body>
