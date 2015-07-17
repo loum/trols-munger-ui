@@ -1,10 +1,10 @@
-/* BAIP custom CSS
+/* TROLS Munger custom CSS
  */
-#baip-row {
+#trols-row {
     display: table;
 }
 
-#baip-row .panel {
+#trols-row .panel {
     float: none;
     display: table-cell;
     vertical-align: middle;

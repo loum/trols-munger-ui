@@ -1,5 +1,5 @@
         {% extends "layout.html" %}
-        {% set title = 'Upload files' %}
+        {% set title = 'Dashboard' %}
         {% block content %}
         <div class="col-sm-9
                     col-sm-offset-3
@@ -7,27 +7,29 @@
                     col-md-offset-2
                     main">
           {% block steps %}
-          <h2 class="page-header">Upload files</h2>
+          <h2 class="page-header">Dashboard</h2>
 
-          <div id="baip-row" class="row placeholders">
-            <div class="col-xs-6 col-sm-3 col-md-6 panel">
-              <input type="file"
-                     class="filestyle"
-                     data-buttonName="btn-primary"
-                     data-buttonBefore="true"
-                     data-buttonText="Find file">
-            </div>
-            <div class="col-xs-3 col-sm-2 panel">
-              <img src="/static/images/arrow_right.png"
-                   alt="Arrow right"
-                   style="width:75px;height:75px">
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder panel">
+          <div class="row placeholders">
+            <div class="col-xs-6 col-sm-3 placeholder">
               <img data-src="holder.js/100x100/text:Configuration/vine"
                    class="img-responsive"
                    alt="Configuration">
               <h4>Step 2</h4>
               <span class="text-muted">Configuration</span>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img data-src="holder.js/100x100/text:Munge/sky"
+                   class="img-responsive"
+                   alt="Munge">
+              <h4>Step 3</h4>
+              <span class="text-muted">Munge</span>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img data-src="holder.js/100x100/text:Download files/vine"
+                   class="img-responsive"
+                   alt="Download files">
+              <h4>Step 4</h4>
+              <span class="text-muted">Download files</span>
             </div>
           </div>
           {% endblock steps %}
