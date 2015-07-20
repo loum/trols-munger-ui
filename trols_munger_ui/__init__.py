@@ -25,7 +25,7 @@ def get_db():
     """Opens a new database connection if there is none yet for the
     current application context.
     """
-    top = _app_ctx_stack.top
+    top = flask._app_ctx_stack.top
     if not hasattr(top, 'shelve'):
         top.shelve = db
     return top.shelve
