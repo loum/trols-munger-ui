@@ -45,3 +45,17 @@ def query_terms_to_dict(request, key_preamble=None):
     log.debug('Parsed query strings: %s' % query_strings)
 
     return query_strings
+
+def player_ids_dict(player_ids):
+    def player_id_struct(player_id):
+        (name, team, section, comp_type, comp) = player_id.split('|')
+
+        return {
+            'name': name,
+            'team': team,
+            'section': section,
+            'comp_type': comp_type,
+            'comp': comp,
+        }
+
+    return [player_id_struct(x) for x in player_ids]

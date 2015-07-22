@@ -1,5 +1,18 @@
 {
   "players": [
-    "Isabella Markovski|Watsonia Blue|14|girls"
+    {
+      "comp": "saturday_am_autumn_2015", 
+      "comp_type": "girls", 
+      "name": "Isabella Markovski", 
+      "section": "14", 
+      "team": "Watsonia Blue"
+    }, 
+    {
+      "comp": "saturday_am_spring_2015", 
+      "comp_type": "girls", 
+      "name": "Isabella Markovski", 
+      "section": "12", 
+      "team": "Watsonia"
+    }
   ]
 }

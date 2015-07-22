@@ -9,7 +9,8 @@ class TestSearch(unittest2.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        trols_munger_ui.app.config['SHELVE'] = '/var/tmp/trols_shelve'
+        shelve_dir = os.path.join('trols_munger_ui', 'tests', 'files')
+        trols_munger_ui.app.config['SHELVE'] = shelve_dir
         cls.__app = trols_munger_ui.app.test_client()
 
         cls.__results_dir = os.path.join('trols_munger_ui',

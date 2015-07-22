@@ -5,7 +5,8 @@ import urlparse
 
 import trols_munger_ui
 import trols_stats.interface
-from trols_munger_ui.utils import query_terms_to_dict
+from trols_munger_ui.utils import (query_terms_to_dict,
+                                   player_ids_dict)
 
 
 @trols_munger_ui.app.route('/munger/health')
@@ -34,4 +35,4 @@ def search():
         players = reporter.get_players(terms.get('q'))
         trols_munger_ui.app.logger.debug('Players: "%s"', players)
 
-    return flask.json.jsonify({'players': [p for p in players]})
+    return flask.json.jsonify({'players': player_ids_dict(players)})
