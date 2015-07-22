@@ -56,6 +56,7 @@ def player_ids_dict(player_ids):
             'section': section,
             'comp_type': comp_type,
             'comp': comp,
+            'token': player_id,
         }
 
     return [player_id_struct(x) for x in player_ids]

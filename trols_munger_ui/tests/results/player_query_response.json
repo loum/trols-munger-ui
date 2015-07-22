@@ -5,14 +5,16 @@
       "comp_type": "girls", 
       "name": "Isabella Markovski", 
       "section": "14", 
-      "team": "Watsonia Blue"
+      "team": "Watsonia Blue", 
+      "token": "Isabella Markovski|Watsonia Blue|14|girls|saturday_am_autumn_2015"
     }, 
     {
       "comp": "saturday_am_spring_2015", 
       "comp_type": "girls", 
       "name": "Isabella Markovski", 
       "section": "12", 
-      "team": "Watsonia"
+      "team": "Watsonia", 
+      "token": "Isabella Markovski|Watsonia|12|girls|saturday_am_spring_2015"
     }
   ]
 }
