@@ -1,0 +1,34 @@
+          {% extends "layout.html" %}
+            {% block tab_content %}
+            <div class="panel panel-default">
+              <!-- Default panel contents -->
+              <div class="panel-heading">
+                <b><i>Search terms: </i></b>{{ search_terms }}
+              </div>
+
+              <!-- Table -->
+              <table class="table" table-striped">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Team</th>
+                    <th>Section #</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {% for player in result %}
+                  <tr>
+                    <td>
+                      <a href="/munger/stats?token={{ player.token }}">
+                        {{ player.name }}
+                      </a>
+                    </td>
+                    <td>{{ player.team }}&nbsp;{{ player.comp_type }}</td>
+                    <td>{{ player.section }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            {% endblock tab_content %}

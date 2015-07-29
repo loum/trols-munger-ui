@@ -1,0 +1,111 @@
+          {% extends "layout.html" %}
+            {% block tab_content %}
+            <div class="panel panel-default">
+              <!-- Default panel contents -->
+              {% for token, stats in result.iteritems() %}
+              <div class="panel-heading">
+                <b><i>Statistics for player: </i></b>{{ token }}
+              </div>
+
+              <table class="table">
+                <tbody>
+                  <tr>
+                    <td> 
+                      <!-- Singles panel -->
+                      <div class="panel panel-info">
+                        <div class="panel-heading">
+                          <b>Singles:</b>
+                        </div>
+
+                        <table class="table">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <strong>Sets played:</strong>
+                              </td>
+                              <td>
+                                {{ stats.singles['games_played'] }}
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <strong>Sets won/lost:</strong>
+                              </td>
+                              <td>
+                                {% set set_pc = 0 %}
+                                {% if stats.singles['games_lost'] > 0 %}
+                                  {% set set_pc = stats.singles['games_won'] / stats.singles['games_lost'] * 100 %}
+                                {% endif %}
+                                {{ stats.singles['games_won'] }}/{{ stats.singles['games_lost'] }}&nbsp;@&nbsp;{{ '%0.2f' % set_pc }}%
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <strong>Games won/lost:</strong>
+                              </td>
+                              <td>
+                                {% set score_pc = 0 %}
+                                {% if stats.singles['score_against'] > 0 %}
+                                  {% set score_pc = stats.singles['score_for'] / stats.singles['score_against'] * 100 %}
+                                {% endif %}
+                                {{ stats.singles['score_for'] }}/{{ stats.singles['score_against'] }}&nbsp;@&nbsp;{{ '%0.2f' % score_pc }}%
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </td> 
+
+                    <td> 
+                      <!-- Doubles panel -->
+                      <div class="panel panel-info">
+                        <div class="panel-heading">
+                          <b>Doubles:</b>
+                        </div>
+
+                        <table class="table">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <strong>Sets played:</strong>
+                              </td>
+                              <td>
+                                {{ stats.doubles['games_played'] }}
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <strong>Sets won/lost:</strong>
+                              </td>
+                              <td>
+                                {% set set_pc = 0 %}
+                                {% if stats.doubles['games_lost'] > 0 %}
+                                  {% set set_pc = stats.doubles['games_won'] / stats.doubles['games_lost'] * 100 %}
+                                {% endif %}
+                                {{ stats.doubles['games_won'] }}/{{ stats.doubles['games_lost'] }}&nbsp;@&nbsp;{{ '%0.2f' % set_pc }}%
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <strong>Games won/lost:</strong>
+                              </td>
+                              <td>
+                                {% set score_pc = 0 %}
+                                {% if stats.doubles['score_against'] > 0 %}
+                                  {% set score_pc = stats.doubles['score_for'] / stats.doubles['score_against'] * 100 %}
+                                {% endif %}
+                                {{ stats.doubles['score_for'] }}/{{ stats.doubles['score_against'] }}&nbsp;@&nbsp;{{ '%0.2f' % score_pc }}%
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </td> 
+                  </tr> 
+                </tbody>
+              </table>
+              {% endfor %}
+
+            </div>
+
+            {% endblock tab_content %}
