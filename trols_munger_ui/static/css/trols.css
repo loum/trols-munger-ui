@@ -9,3 +9,9 @@
     display: table-cell;
     vertical-align: middle;
 }
+
+header[role="banner"] {
+  #logo-main {
+    display: block;
+  }
+}

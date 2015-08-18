@@ -8,11 +8,12 @@ from logga.log import log
 
 
 app = flask.Flask(__name__)
-app.config.from_object('config')
+app.config.from_object('trols_munger_ui.config')
 import trols_munger_ui.views
 
 db = None
 if app.config.get('SHELVE') is not None:
+    log.info('SHELVE: %s', app.config.get('SHELVE'))
     session = trols_stats.DBSession(shelve=app.config.get('SHELVE'))
     session.connect()
     log.info('Reading TROLS stats in memory ...')

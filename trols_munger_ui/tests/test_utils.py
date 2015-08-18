@@ -64,8 +64,8 @@ class TestUtils(unittest2.TestCase):
         """
         # Given a list of player IDs
         players = [
-            "John Guanzon|Epping|3|boys|saturday_am_spring_2015",
-            "Whitney Guan|Clifton|2|girls|saturday_am_spring_2015",
+            "John Guanzon~Epping~3~boys~saturday_am_spring_2015",
+            "Whitney Guan~Clifton~2~girls~saturday_am_spring_2015",
         ]
 
         # when I convert to a dictionary structure
@@ -80,7 +80,7 @@ class TestUtils(unittest2.TestCase):
                 'section': '3',
                 'team': 'Epping',
                 'token':
-                    'John Guanzon|Epping|3|boys|saturday_am_spring_2015'
+                    'John Guanzon~Epping~3~boys~saturday_am_spring_2015'
             },
             {
                 'comp': 'saturday_am_spring_2015',
@@ -89,7 +89,7 @@ class TestUtils(unittest2.TestCase):
                 'section': '2',
                 'team': 'Clifton',
                 'token':
-                    'Whitney Guan|Clifton|2|girls|saturday_am_spring_2015'
+                    'Whitney Guan~Clifton~2~girls~saturday_am_spring_2015'
             }
         ]
         msg = 'Player IDs to dict conversion error'

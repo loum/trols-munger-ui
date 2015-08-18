@@ -1,0 +1,3 @@
+include trols_stats/conf/*.conf
+recursive-include trols_munger_ui/templates *
+recursive-include trols_munger_ui/static *

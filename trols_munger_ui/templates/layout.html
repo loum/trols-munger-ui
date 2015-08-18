@@ -17,6 +17,37 @@
     <!-- Bootstrap core CSS -->
     <link href="/static/dist/css/bootstrap.min.css" rel="stylesheet">
 
+    <style>
+      .main-container {
+          box-shadow: 1px 1px 2px gray;
+      }
+
+      html,body {
+          height:100%;
+      }
+
+      body {
+          padding-top:50px; /*padding for navbar*/
+      }
+
+      .navbar-custom {
+          background-color: #EDEDED;
+          color: #fff;
+      }
+
+      .navbar-fixed-top {
+          min-height: 90px;
+      }
+
+      .vertical-center {
+           min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+           min-height: 100vh; /* These two lines are counted as one :-)       */
+           display: flex;
+           align-items: center;
+      }
+
+    </style>
+
     <!-- Custom styles for this template -->
     <link href="/static/css/trols.css" rel="stylesheet">
     <link href="/static/css/dashboard.css" rel="stylesheet">
@@ -34,58 +65,63 @@
   </head>
 
   <body>
+    <!-- Navbar -->
+    <div class="navbar-fixed-top navbar-custom">
 
-    <div class="container">
-    <nav class="navbar navbar-default">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button"
-                  class="navbar-toggle collapsed"
-                  data-toggle="collapse"
-                  data-target="#navbar"
-                  aria-expanded="false"
-                  aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand"
-             href="/munger/dashboard">TROLS Munger (beta)
-          </a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <form class="navbar-form navbar-right" action="/munger/players">
+      <!-- Navbar brand -->
+      <div class="navbar-header">
+        <a class="navbar-brand" data-toggle="collapse" data-target=".navbar-collapse">
+          <img id="logo-main"
+               src="/static/images/tennis_ball.png"
+               width="230"
+               class="main-container"
+               alt="TROLS Munger Tennis Ball">
+        </a>
+      </div>
+
+      <div class="navbar-custom pull-right" style="padding-top: 20px;">
+        <form class="navbar-form" action="/munger/players">
+          <div class="form-group">
             <div class="input-group">
               <input name="q"
                      type="text"
-                     class="form-control" placeholder="Search...">
-                <div class="input-group-btn">
+                     class="form-control"
+                     placeholder="Player ...">
+              <div class="input-group-btn">
                   <button type="submit" class="btn btn-success">
                     <span class="glyphicon glyphicon-search"></span>
                   </button>
-              </dev/>
+              </div>
             </div>
-          </form>
-        </div>
+          </div>
+        </form>
       </div>
-    </nav>
+    </div>
 
-    <div class="container-fluid">
+    <div class="container">
       <div class="row-fluid">
         {% block content %}
         <div id="content">
 
           {% block tabs %}
           <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+            {% block saturday_am_spring_2015_search %}
             <li class="active">
-              <a href="#netja_saturday_am_spring_2015"
-                 data-toggle="tab">NEJTA Saturday AM Spring 2015</a>
+              <a href="#"
+                 data-toggle="tab">
+                <strong>NEJTA Saturday AM Spring 2015</strong>
+              </a>
             </li>
+            {% endblock saturday_am_spring_2015_search %}
+
+            {% block saturday_am_autumn_2015_search %}
             <li>
-              <a href="#orange"
-                 data-toggle="tab">NEJTA Saturday AM Autumn 2015</a>
+              <a href="#"
+                 data-toggle="tab">
+                <strong>NEJTA Saturday AM Autumn 2015</strong>
+              </a>
             </li>
+            {% endblock saturday_am_autumn_2015_search %}
           </ul>
           <div id="my-tab-content" class="tab-content">
             {% block tab_content %}{% endblock tab_content %}
@@ -99,13 +135,6 @@
       </div>
       {% endblock content %}
     </div>
-    </div>
-
-    <footer class="footer">
-      <div class="container">
-        <p class="text-muted">TROLS Munger</p>
-      </div>
-    </footer>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

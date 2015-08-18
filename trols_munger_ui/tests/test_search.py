@@ -21,13 +21,13 @@ class TestSearch(unittest2.TestCase):
         """Test the search URL.
         """
         # Given a query string
-        query_kwargs = {
+        kwargs = {
             'q': 'Isabella Markovski'
         }
-        query_string = urllib.urlencode(query_kwargs)
+        query = urllib.urlencode(kwargs)
 
         # when I send to the search URL
-        response = self.__app.get('/munger/search?{}'.format(query_string))
+        response = self.__app.get('/munger/search?{}'.format(query))
 
         # then I should get ...
         received = response.status_code

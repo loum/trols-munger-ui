@@ -1,4 +1,38 @@
           {% extends "layout.html" %}
+
+            {% block saturday_am_spring_2015_search %}
+            {% if competition == 'saturday_am_spring_2015' %}
+            <li class="active">
+            {% else %}
+            <li>
+            {% endif %}
+
+              {% if competition == 'saturday_am_spring_2015' %}
+              <a href="#">
+              {% else %}
+              <a href="/munger/players/nejta/2015/spring?q={{ search_terms }}">
+              {% endif %}
+                <strong>NEJTA Saturday AM Spring 2015</strong>
+              </a>
+            </li>
+            {% endblock saturday_am_spring_2015_search %}
+
+            {% block saturday_am_autumn_2015_search %}
+            {% if competition == 'saturday_am_autumn_2015' %}
+            <li class="active">
+            {% else %}
+            <li>
+            {% endif %}
+              {% if competition == 'saturday_am_autumn_2015' %}
+              <a href="#">
+              {% else %}
+              <a href="/munger/players/nejta/2015/autumn?q={{ search_terms }}">
+              {% endif %}
+                <strong>NEJTA Saturday AM Autumn 2015</strong>
+              </a>
+            </li>
+            {% endblock saturday_am_autumn_2015_search %}
+
             {% block tab_content %}
             <div class="panel panel-default">
               <!-- Default panel contents -->

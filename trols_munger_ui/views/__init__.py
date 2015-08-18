@@ -28,12 +28,19 @@ def dashboard():
 def players(league='nejta', year='2015', season='spring'):
     terms = query_terms_to_dict(flask.request.url)
 
+    competition = None
+    if league == 'nejta':
+        competition = 'saturday_am_{}_{}'.format(season, year)
+
+    trols_munger_ui.app.logger.debug('competition: %s', competition)
+
     db = trols_munger_ui.get_db()
     reporter = trols_stats.interface.Reporter(db=db)
 
     players = []
     if terms.get('q') is not None:
-        players = reporter.get_players(terms.get('q'))
+        players = reporter.get_players(names=terms.get('q'),
+                                       competition=competition)
         trols_munger_ui.app.logger.debug('Players: "%s"', players)
 
     search_terms = str()
@@ -42,12 +49,14 @@ def players(league='nejta', year='2015', season='spring'):
 
     return flask.render_template('players/layout.html',
                                  result=player_ids_dict(players),
-                                 search_terms=search_terms)
+                                 search_terms=search_terms,
+                                 competition=competition)
     
 
 @trols_munger_ui.app.route('/munger/stats')
 def stats():
     terms = query_terms_to_dict(flask.request.url)
+    trols_munger_ui.app.logger.debug('Stats route terms: %s', terms)
 
     db = trols_munger_ui.get_db()
     reporter = trols_stats.interface.Reporter(db=db)
