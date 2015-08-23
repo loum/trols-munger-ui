@@ -15,3 +15,7 @@ header[role="banner"] {
     display: block;
   }
 }
+
+.table th, .table td { 
+     border-top: none !important; 
+ }

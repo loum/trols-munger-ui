@@ -17,10 +17,49 @@ def health():
 
 
 @trols_munger_ui.app.route('/munger')
-def dashboard():
+def munger():
     """Munger
     """
-    return flask.render_template('layout.html')
+    db = trols_munger_ui.get_db()
+    reporter = trols_stats.interface.Reporter(db=db)
+
+    terms = query_terms_to_dict(flask.request.url)
+
+    stats = {}
+    if terms.keys():
+        section = terms.get('section')
+        if section is not None:
+            section = section[0]
+
+        comp_type = terms.get('type')
+        if comp_type is not None:
+            comp_type = comp_type[0]
+
+        event = terms.get('event')
+        if event is not None:
+            event = event[0]
+        else:
+            event = 'doubles'
+
+        kwargs = {
+            'competition': 'saturday_am_spring_2015',
+            'competition_type': comp_type,
+            'section': section
+        }
+        player_tokens = reporter.get_players(**kwargs)
+        all_stats = reporter.get_player_stats(player_tokens)
+        filtered_stats = reporter.sort_stats(all_stats,
+                                             event=event,
+                                             key='percentage',
+                                             reverse=True,
+                                             limit=None)
+
+        stats['comp_type'] = comp_type
+        stats['event'] = event
+        stats['section'] = section
+        stats['players'] = filtered_stats
+
+    return flask.render_template('munger/layout.html', result=stats)
 
 
 @trols_munger_ui.app.route('/munger/players')
@@ -56,7 +95,6 @@ def players(league='nejta', year='2015', season='spring'):
 @trols_munger_ui.app.route('/munger/stats')
 def stats():
     terms = query_terms_to_dict(flask.request.url)
-    trols_munger_ui.app.logger.debug('Stats route terms: %s', terms)
 
     db = trols_munger_ui.get_db()
     reporter = trols_stats.interface.Reporter(db=db)
@@ -68,7 +106,6 @@ def stats():
 @trols_munger_ui.app.route('/munger/search')
 def search():
     terms = query_terms_to_dict(flask.request.url)
-    trols_munger_ui.app.logger.debug('Free text search: "%s"', terms)
 
     db = trols_munger_ui.get_db()
     reporter = trols_stats.interface.Reporter(db=db)

@@ -12,7 +12,7 @@
     <meta name="author" content="">
     <link rel="icon" href="/static/favicon.ico">
 
-    <title>TROLS Munger | {{ title }}</title>
+    <title>TROLS Munger {{ title }}</title>
 
     <!-- Bootstrap core CSS -->
     <link href="/static/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -31,12 +31,13 @@
       }
 
       .navbar-custom {
+          box-shadow: 1px 1px 2px gray;
           background-color: #EDEDED;
           color: #fff;
       }
 
       .navbar-fixed-top {
-          min-height: 90px;
+          min-height: 87px;
       }
 
       .vertical-center {
@@ -70,7 +71,10 @@
 
       <!-- Navbar brand -->
       <div class="navbar-header">
-        <a class="navbar-brand" data-toggle="collapse" data-target=".navbar-collapse">
+        <a href="/munger"
+           class="navbar-brand"
+           data-toggle="collapse"
+           data-target=".navbar-collapse">
           <img id="logo-main"
                src="/static/images/tennis_ball.png"
                width="230"
@@ -79,7 +83,7 @@
         </a>
       </div>
 
-      <div class="navbar-custom pull-right" style="padding-top: 20px;">
+      <div class="pull-right" style="padding-top: 20px;">
         <form class="navbar-form" action="/munger/players">
           <div class="form-group">
             <div class="input-group">
