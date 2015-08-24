@@ -1,5 +1,21 @@
           {% extends "layout.html" %}
-            {% block content %}
+
+          {% block tabs %}
+          <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+            {% block saturday_am_spring_2015_search %}
+            <li class="active">
+              <a href="#"
+                 data-toggle="tab">
+                <strong>NEJTA Saturday AM Spring 2015</strong>
+              </a>
+            </li>
+            {% endblock saturday_am_spring_2015_search %}
+
+            {% block saturday_am_autumn_2015_search %}
+            {% endblock saturday_am_autumn_2015_search %}
+          </ul>
+
+            {% block tab_content %}
             <div class="panel panel-default">
 
               <!-- Default panel contents -->
@@ -88,4 +104,5 @@
               </table>
 
             </div>
-            {% endblock content %}
+            {% endblock tab_content %}
+          {% endblock tabs %}
