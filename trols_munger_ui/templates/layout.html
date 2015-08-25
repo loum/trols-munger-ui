@@ -27,7 +27,7 @@
       }
 
       body {
-          padding-top:50px; /*padding for navbar*/
+          padding-top: 90px; /*padding for navbar*/
       }
 
       .navbar-custom {
@@ -38,6 +38,10 @@
 
       .navbar-fixed-top {
           min-height: 87px;
+      }
+
+      .panel {
+          margin-bottom: 0;
       }
 
       .vertical-center {
@@ -67,10 +71,10 @@
 
   <body>
     <!-- Navbar -->
-    <div class="navbar-fixed-top navbar-custom hidden-tablet hidden-phone">
+    <div class="navbar-fixed-top navbar-custom">
 
       <!-- Navbar brand -->
-      <div class="navbar-header">
+      <div class="navbar-header hidden-xs">
         <a href="/munger"
            class="navbar-brand"
            data-toggle="collapse"
@@ -133,9 +137,8 @@
                  id="netja_saturday_am_spring_2015">
             </div>
           </div>
+          {% endblock tabs %}
         </div>
-        {% endblock tabs %}
-
       </div>
       {% endblock content %}
     </div>
