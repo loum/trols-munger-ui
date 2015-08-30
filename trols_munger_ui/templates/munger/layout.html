@@ -43,7 +43,9 @@
                       {%- endfor %}
                     </select>
                   </div>
-                  <button type="submit" class="btn btn-success">Get Rankings!</button>
+                  <button type="submit" class="btn btn-success">
+                    Get Rankings!
+                  </button>
                 </form>
               </div>
 
@@ -53,10 +55,21 @@
                   {% for player in result.players %}
                   <tr>
                     <td> 
-                      <!-- Doubles panel -->
                       <div class="panel panel-info">
                         <div class="panel-heading">
-                          <b>{{ position }}.&nbsp;{{ player[1].name }}&nbsp;({{ player[1].team }})&nbsp;Section&nbsp;{{ player[1].section }}</b>
+                          <b>{{ position }}.&nbsp;</b>
+                            <a name="{{ player[1].name }}"
+                               href="{{ url_for('stats', token=player[0]) }}">
+                              {{ player[1].name }}
+                            </a>
+                            &nbsp;({{ player[1].team }})&nbsp;Section&nbsp;{{ player[1].section }}
+                            <span class="pull-right">
+                              <a href="#">
+                                <img alt="top"
+                                     src="{{ url_for('static', filename='images/arrow-up.png') }}"
+                                     width="20">
+                              </a>
+                            </span>
                         </div>
 
                         <table class="table-condensed">

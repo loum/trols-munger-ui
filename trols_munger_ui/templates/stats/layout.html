@@ -17,7 +17,9 @@
                       <!-- Singles panel -->
                       <div class="panel panel-info">
                         <div class="panel-heading">
-                          <b>Singles:</b>
+                          <a href="{{ url_for('munger', event='singles', type=stats['comp_type'], section=stats['section'], _anchor=stats['name']) }}">
+                            <b>Singles</b>
+                          </a>
                         </div>
 
                         <table class="table">
@@ -63,7 +65,9 @@
                       <!-- Doubles panel -->
                       <div class="panel panel-info">
                         <div class="panel-heading">
-                          <b>Doubles:</b>
+                          <a href="{{ url_for('munger', event='doubles', type=stats['comp_type'], section=stats['section'], _anchor=stats['name']) }}">
+                            <b>Doubles</b>
+                          </a>
                         </div>
 
                         <table class="table">
