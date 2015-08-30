@@ -46,6 +46,7 @@ def query_terms_to_dict(request, key_preamble=None):
 
     return query_strings
 
+
 def player_ids_dict(player_ids):
     def player_id_struct(player_id):
         (name, team, section, comp_type, comp) = player_id.split('~')

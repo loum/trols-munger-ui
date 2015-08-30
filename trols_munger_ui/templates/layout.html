@@ -10,53 +10,17 @@
     -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="/static/favicon.ico">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
-    <title>TROLS Munger {{ title }}</title>
+    <title>TROLS Munger</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="/static/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-      .main-container {
-          box-shadow: 1px 1px 2px gray;
-      }
-
-      html,body {
-          height:100%;
-      }
-
-      body {
-          padding-top: 90px; /*padding for navbar*/
-      }
-
-      .navbar-custom {
-          box-shadow: 1px 1px 2px gray;
-          background-color: #EDEDED;
-          color: #fff;
-      }
-
-      .navbar-fixed-top {
-          min-height: 87px;
-      }
-
-      .panel {
-          margin-bottom: 0;
-      }
-
-      .vertical-center {
-           min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
-           min-height: 100vh; /* These two lines are counted as one :-)       */
-           display: flex;
-           align-items: center;
-      }
-
-    </style>
+    <link href="{{ url_for('static', filename='dist/css/bootstrap.min.css') }}"
+          rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="/static/css/trols.css" rel="stylesheet">
     <link href="/static/css/dashboard.css" rel="stylesheet">
-    <link href="/static/css/sticky-footer-navbar.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -67,44 +31,67 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>
+      window.jQuery || document.write('<script src="{{ url_for('static', filename='assets/js/jquery.min.js') }}">\x3C/script>')
+    </script>
+
+    <script type=text/javascript>
+      $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+
+    <script type="text/javascript">
+    //<![CDATA[
+    $(window).load(function(){
+      $.getJSON($SCRIPT_ROOT + '/_last_update', function(result) {
+        var date = new Date(Date.parse(result.last_update));
+        var options = {
+          weekday: "long", year: "numeric", month: "short",
+          day: "numeric", hour: "2-digit", minute: "2-digit"
+        };
+        $("#last_update").text(date.toLocaleTimeString("en-us", options))
+      });
+    });
+    //]]>
+    </script>
   </head>
 
   <body>
-    <!-- Navbar -->
-    <div class="navbar-fixed-top navbar-custom">
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/munger">
+            <img alt="TROLS Munger"
+                 src="{{ url_for('static', filename='images/munger.png') }}"
+                 width="45px"
+            >
+          </a>
+        </div>
 
-      <!-- Navbar brand -->
-      <div class="navbar-header hidden-xs">
-        <a href="/munger"
-           class="navbar-brand"
-           data-toggle="collapse"
-           data-target=".navbar-collapse">
-          <img id="logo-main"
-               src="/static/images/tennis_ball.png"
-               width="230"
-               class="main-container"
-               alt="TROLS Munger Tennis Ball">
-        </a>
-      </div>
+        <p class="navbar-text"><strong>Updated:</strong>
+          <span id="last_update"></span>
+        </p>
 
-      <div class="pull-right" style="padding-top: 20px;">
-        <form class="navbar-form" action="/munger/players">
-          <div class="form-group">
-            <div class="input-group">
-              <input name="q"
-                     type="text"
-                     class="form-control"
-                     placeholder="Player ...">
-              <div class="input-group-btn">
-                  <button type="submit" class="btn btn-success">
-                    <span class="glyphicon glyphicon-search"></span>
-                  </button>
+        <div class="pull-right">
+          <form class="navbar-form" action="/munger/players">
+            <div class="form-group">
+              <div class="input-group">
+                <input name="q"
+                       type="text"
+                       class="form-control"
+                       placeholder="Player ...">
+                <div class="input-group-btn">
+                    <button type="submit" class="btn btn-success">
+                      <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </div>
               </div>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
-    </div>
+    </nav>
 
     <div class="container">
       <div class="row-fluid">
@@ -146,7 +133,6 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="/static/dist/js/bootstrap.min.js"></script>
     <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
     <script src="/static/assets/js/vendor/holder.js"></script>

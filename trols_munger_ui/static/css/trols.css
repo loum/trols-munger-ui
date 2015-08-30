@@ -19,3 +19,7 @@ header[role="banner"] {
 .table th, .table td { 
      border-top: none !important; 
  }
+
+.panel {
+    margin-bottom: 0;
+}

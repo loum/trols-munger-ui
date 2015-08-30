@@ -38,9 +38,9 @@
                   <div class="form-group">
                     <select class="form-control" name="section">
                       <option value="" {% if result.section == "" %}selected disabled{% endif %}>Section</option>
-                      {% for section_no in range(1, 26) %}
-                      <option value="{{ section_no }}" {% if result.section == section_no|string %}selected{% endif %}>{{ section_no }}</option>
-                      {% endfor %}
+                      {% for section_no in range(1, 27) %}
+                      <option value="{{ section_no }}"{% if result.section == section_no|string %}selected{% endif %}>{{ section_no }}</option>
+                      {%- endfor %}
                     </select>
                   </div>
                   <button type="submit" class="btn btn-success">Get Rankings!</button>

@@ -68,6 +68,11 @@
 .main {
   padding: 20px;
 }
+
+.navbar-brand {
+  padding: 0px 20px;
+}
+
 @media (min-width: 768px) {
   .main {
     padding-right: 40px;

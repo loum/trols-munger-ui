@@ -2,11 +2,13 @@
 """
 import flask
 import urlparse
+import os
 
 import trols_munger_ui
 import trols_stats.interface
 from trols_munger_ui.utils import (query_terms_to_dict,
                                    player_ids_dict)
+from filer.files import get_file_time_in_utc
 
 
 @trols_munger_ui.app.route('/munger/health')
@@ -116,3 +118,14 @@ def search():
         trols_munger_ui.app.logger.debug('Players: "%s"', players)
 
     return flask.json.jsonify({'players': player_ids_dict(players)})
+
+
+@trols_munger_ui.app.route('/_last_update')
+def _last_update():
+    shelve_db = os.path.join(trols_munger_ui.app.config.get('SHELVE'),
+                             'trols_stats.db')
+    last_upd_utc_time = {'last_update': get_file_time_in_utc(shelve_db)}
+    trols_munger_ui.app.logger.debug('Last updated: "%s"',
+                                     last_upd_utc_time)
+
+    return flask.jsonify(last_upd_utc_time)
