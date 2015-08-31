@@ -43,10 +43,15 @@ def munger():
         else:
             event = 'doubles'
 
+        team = terms.get('team')
+        if team is not None:
+            team = team[0]
+
         kwargs = {
             'competition': 'saturday_am_spring_2015',
             'competition_type': comp_type,
-            'section': section
+            'section': section,
+            'team': team
         }
         player_tokens = reporter.get_players(**kwargs)
         all_stats = reporter.get_player_stats(player_tokens)
@@ -59,7 +64,9 @@ def munger():
         stats['comp_type'] = comp_type
         stats['event'] = event
         stats['section'] = section
+        stats['team'] = team
         stats['players'] = filtered_stats
+    trols_munger_ui.app.logger.debug('stats: %s', stats)
 
     return flask.render_template('munger/layout.html', result=stats)
 

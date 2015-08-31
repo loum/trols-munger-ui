@@ -23,26 +23,38 @@
                 <form class="form-inline" action="/munger" method="get">
                   <div class="form-group">
                     <select class="form-control" name="event">
-                      <option value="" {% if result.event == "" %}selected disabled {% endif %}>Event</option>
+                      <option value=""{% if not result.event %} selected disabled {% endif %}>Event</option>
                       <option value="singles" {% if result.event == "singles" %}selected{% endif %}>singles</option>
                       <option value="doubles" {% if result.event == "doubles" %}selected{% endif %}>doubles</option>
                     </select>
                   </div>
+
                   <div class="form-group">
                     <select class="form-control" name="type">
-                      <option value="" {% if result.comp_type == "" %}selected disabled{% endif %}>Event type</option>
+                      <option value=""{% if not result.comp_type %} selected disabled{% endif %}>Event type</option>
                       <option value="boys" {% if result.comp_type == "boys" %}selected{% endif %}>boys</option>
                       <option value="girls" {% if result.comp_type == "girls" %}selected{% endif %}>girls</option>
                     </select>
                   </div>
+
                   <div class="form-group">
                     <select class="form-control" name="section">
-                      <option value="" {% if result.section == "" %}selected disabled{% endif %}>Section</option>
+                      <option value=""{% if not result.section %} selected disabled{% endif %}>Section</option>
                       {% for section_no in range(1, 27) %}
-                      <option value="{{ section_no }}"{% if result.section == section_no|string %}selected{% endif %}>{{ section_no }}</option>
+                      <option value="{{ section_no }}" {% if result.section == section_no|string %}selected{% endif %}>{{ section_no }}</option>
                       {%- endfor %}
                     </select>
                   </div>
+
+                  <div class="form-group">
+                    <select class="form-control" name="team">
+                      <option value=""{% if not result.team %} selected disabled{% endif %}>Team</option>
+                      {% if result.team %}
+                      <option value="{{ result.team }}" selected>{{ result.team }}</option>
+                      {% endif %}
+                    </select>
+                  </div>
+
                   <button type="submit" class="btn btn-success">
                     Get Rankings!
                   </button>
@@ -58,7 +70,7 @@
                       <div class="panel panel-info">
                         <div class="panel-heading">
                           <b>{{ position }}.&nbsp;</b>
-                            <a name="{{ player[1].name }}"
+                            <a id="{{ player[1].name | replace(' ', '%20') }}"
                                href="{{ url_for('stats', token=player[0]) }}">
                               {{ player[1].name }}
                             </a>
