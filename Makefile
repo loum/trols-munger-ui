@@ -20,7 +20,9 @@ PYTHONPATH=.:../logga:../configa:../filer:../trols-stats
 # the current namespace via "tests/__init__.py"
 TEST=trols_munger_ui.tests:TestHealth \
 	trols_munger_ui.tests:TestSearch \
-	trols_munger_ui.tests:TestUtils
+	trols_munger_ui.tests:TestUtils \
+	trols_munger_ui.tests:TestLastUpdate \
+	trols_munger_ui.tests:TestTeams
 
 sdist:
 	$(PY) setup.py sdist

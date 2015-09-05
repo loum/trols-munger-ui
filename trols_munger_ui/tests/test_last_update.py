@@ -12,21 +12,21 @@ class TestLastUpdate(unittest2.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.__shelve_dir = tempfile.mkdtemp()
-        trols_munger_ui.app.config['SHELVE'] = cls.__shelve_dir
+        cls.__shelve_db = os.path.join(cls.__shelve_dir, 'trols_stats.db')
+        trols_munger_ui.app.config['SHELVE_DB'] = cls.__shelve_db
         cls.__app =  trols_munger_ui.app.test_client()
 
     def test_last_update(self):
         """Test the last update UTC timestamp.
         """
         # Given a shelve DB file
-        shelve_db = os.path.join(self.__shelve_dir, 'trols_stats.db')
         file_obj = tempfile.NamedTemporaryFile(delete=False)
         filename = file_obj.name
         file_obj.close()
-        move_file(filename, shelve_db)
+        move_file(filename, self.__shelve_db)
 
         # and a know timestamp
-        os.utime(shelve_db, (1440901349, 1440901349))
+        os.utime(self.__shelve_db, (1440901349, 1440901349))
 
         # when I source the shelve's modfied time stamp
         response = self.__app.get('/_last_update')

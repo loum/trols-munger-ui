@@ -1,5 +1,57 @@
           {% extends "layout.html" %}
 
+    {% block custom_head_js %}
+    <script type="text/javascript">
+    //<![CDATA[
+    $(window).load(function() {
+        $(document).ready(function() {
+            $('select[name=section]').on('change', function() {
+                var section = $('select[name=section]').val()
+                var comp_type = $('select[name=type]').val()
+                if (comp_type == null) {
+                    comp_type = ''
+                }
+                $('select[name=team] option[value!=""]').remove()
+
+                $.getJSON($SCRIPT_ROOT + '/_teams?competition=saturday_am_spring_2015&type=' + comp_type + '&section=' + section, function(data) {
+                    $.each(data, function(key, value) {
+                        $.each(value, function(idx, team) {
+                            $('<option>').val(team).text(team).appendTo('select[name=team]');
+                        });
+                    });
+                });
+            });
+        });
+    });
+    //]]>
+    </script>
+
+    <script type="text/javascript">
+    //<![CDATA[
+    $(window).load(function() {
+        $(document).ready(function() {
+            $('select[name=type]').on('change', function() {
+                var comp_type = $('select[name=type]').val()
+                var section = $('select[name=section]').val()
+                if (section == null) {
+                    section = ''
+                }
+                $('select[name=team] option[value!=""]').remove()
+
+                $.getJSON($SCRIPT_ROOT + '/_teams?competition=saturday_am_spring_2015&type=' + comp_type + '&section=' + section, function(data) {
+                    $.each(data, function(key, value) {
+                        $.each(value, function(idx, team) {
+                            $('<option>').val(team).text(team).appendTo('select[name=team]');
+                        });
+                    });
+                });
+            });
+        });
+    });
+    //]]>
+    </script>
+    {% endblock custom_head_js %}
+
           {% block tabs %}
           <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
             {% block saturday_am_spring_2015_search %}
