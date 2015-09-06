@@ -8,3 +8,4 @@ from test_stats import TestStats
 from test_last_update import TestLastUpdate
 from test_teams import TestTeams
 from test_google import TestGoogle
+from test_sections import TestSections
