@@ -1,7 +1,10 @@
           {% extends "layout.html" %}
 
     {% block custom_head_js %}
+    <script src="/static/assets/js/utils.js"></script>
+
     <script type="text/javascript">
+    // Update teams when section changes.
     //<![CDATA[
     $(window).load(function() {
         $(document).ready(function() {
@@ -11,14 +14,45 @@
                 if (comp_type == null) {
                     comp_type = ''
                 }
-                $('select[name=team] option[value!=""]').remove()
 
+                $('select[name=team] option[value!=""]').remove()
                 $.getJSON($SCRIPT_ROOT + '/_teams?competition=saturday_am_spring_2015&type=' + comp_type + '&section=' + section, function(data) {
                     $.each(data, function(key, value) {
                         $.each(value, function(idx, team) {
                             $('<option>').val(team).text(team).appendTo('select[name=team]');
                         });
                     });
+                });
+            });
+        });
+    });
+    //]]>
+    </script>
+
+    <script type="text/javascript">
+    // Update teams on first load.
+    //<![CDATA[
+    $(document).ready(function() {
+        var section = $('select[name=section]').val()
+        if (section == null) {
+            section = ''
+        }
+        var comp_type = $('select[name=type]').val()
+        if (comp_type == null) {
+            comp_type = ''
+        }
+        $('select[name=team] option[value!=""]').remove()
+
+        $.getJSON($SCRIPT_ROOT + '/_teams?competition=saturday_am_spring_2015&type=' + comp_type + '&section=' + section, function(data) {
+            var selected_team = getUrlParameter('team');
+            $.each(data, function(key, value) {
+                $.each(value, function(idx, team) {
+                    if (typeof selected_team !== "undefined" && selected_team.replace(/\+/g, ' ') == team) {
+                        $('<option>').val(team).text(team).attr('selected', 'selected').appendTo('select[name=team]');
+                    }
+                    else {
+                        $('<option>').val(team).text(team).appendTo('select[name=team]');
+                    }
                 });
             });
         });
@@ -36,22 +70,20 @@
                 if (section == null) {
                     section = ''
                 }
-                $('select[name=team] option[value!=""]').remove()
-
-                $.getJSON($SCRIPT_ROOT + '/_teams?competition=saturday_am_spring_2015&type=' + comp_type + '&section=' + section, function(data) {
-                    $.each(data, function(key, value) {
-                        $.each(value, function(idx, team) {
-                            $('<option>').val(team).text(team).appendTo('select[name=team]');
-                        });
-                    });
-                });
-
                 $('select[name=section] option[value!=""]').remove()
-
                 $.getJSON($SCRIPT_ROOT + '/_sections?competition=saturday_am_spring_2015&type=' + comp_type, function(data) {
                     $.each(data, function(key, value) {
                         $.each(value, function(idx, section) {
                             $('<option>').val(section).text(section).appendTo('select[name=section]');
+                        });
+                    });
+                });
+
+                $('select[name=team] option[value!=""]').remove()
+                $.getJSON($SCRIPT_ROOT + '/_teams?competition=saturday_am_spring_2015&type=' + comp_type + '&section=' + section, function(data) {
+                    $.each(data, function(key, value) {
+                        $.each(value, function(idx, team) {
+                            $('<option>').val(team).text(team).appendTo('select[name=team]');
                         });
                     });
                 });
@@ -60,6 +92,7 @@
     });
     //]]>
     </script>
+
     {% endblock custom_head_js %}
 
           {% block tabs %}
@@ -149,23 +182,17 @@
                         <table class="table-condensed">
                           <tbody>
                             <tr>
-                              <td>
-                                <strong>Games played&nbsp;({{ result.event }}):&nbsp;</strong>
-                              </td>
-                              <td>
-                                {{ player[1][result.event]['games_played'] }}
-                              </td>
                             </tr>
                             <tr>
                               <td>
-                                <strong>Sets won/lost:</strong>
+                                <strong>Sets ({{ result.event }}) won/lost:</strong>
                               </td>
                               <td>
                                 {% set set_pc = 0 %}
                                 {% if player[1][result.event]['games_lost'] > 0 %}
                                 {% set set_pc = player[1][result.event]['games_won'] / player[1][result.event]['games_lost'] * 100 %}
-                                  {% endif %}
-                                  {{ player[1][result.event]['games_won'] }}/{{ player[1][result.event]['games_lost'] }}&nbsp;@&nbsp;{{ '%0.2f' % set_pc }}%
+                                {% endif %}
+                                {{ player[1][result.event]['games_played'] }} for {{ player[1][result.event]['games_won'] }}/{{ player[1][result.event]['games_lost'] }} @ {{ '%0.2f' % set_pc }}%
                               </td>
                             </tr>
                             <tr>
@@ -176,8 +203,8 @@
                                 {% set set_pc = 0 %}
                                 {% if player[1][result.event]['score_against'] > 0 %}
                                 {% set set_pc = player[1][result.event]['score_for'] / player[1][result.event]['score_against'] * 100 %}
-                                  {% endif %}
-                                  {{ player[1][result.event]['score_for'] }}/{{ player[1][result.event]['score_against'] }}&nbsp;@&nbsp;{{ '%0.2f' % set_pc }}%
+                                {% endif %}
+                                {{ player[1][result.event]['score_for'] }}/{{ player[1][result.event]['score_against'] }} @ {{ '%0.2f' % set_pc }}%
                               </td>
                             </tr>
                           </tbody>
