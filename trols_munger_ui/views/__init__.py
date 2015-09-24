@@ -66,7 +66,8 @@ def munger():
             'team': team
         }
         player_tokens = reporter.get_players(**kwargs)
-        all_stats = reporter.get_player_stats(player_tokens)
+        all_stats = reporter.get_player_stats(player_tokens,
+                                              last_fixture=True)
         filtered_stats = reporter.sort_stats(all_stats,
                                              event=event,
                                              key='percentage',
