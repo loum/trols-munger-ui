@@ -206,6 +206,8 @@
                                 {% endif %}
                                 {{ player[1][result.event]['score_for'] }}/{{ player[1][result.event]['score_against'] }} @ {{ '%0.2f' % set_pc }}%
                               </td>
+                            </tr>
+                            {% if player[1].last_fixture|length %}
                             <tr>
                               <td>
                                 <strong>Last played: R{{ player[1].last_fixture[0].fixture.match_round }} ({{ player[1].last_fixture[0].fixture.date }})</strong>
@@ -230,7 +232,7 @@
                                 {% endif %}
                               </td>
                             </tr>
-                            </tr>
+                            {% endif %}
                           </tbody>
                         </table>
                       </div>
