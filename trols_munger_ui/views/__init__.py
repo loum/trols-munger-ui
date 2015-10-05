@@ -124,7 +124,52 @@ def stats():
 
     stats = reporter.get_player_stats(terms.get('token'))
 
-    return flask.render_template('stats/layout.html', result=stats)
+    fixtures = {}
+    if terms.get('token') is not None:
+        token = terms.get('token')[0]
+        singles = [x() for x in reporter.get_player_singles(token)]
+        doubles = [x() for x in reporter.get_player_doubles(token)]
+        fixtures['singles'] = singles
+        fixtures['doubles'] = doubles
+
+        player_details = player_ids_dict([token])
+        if len(player_details):
+            fixtures.update(player_details[0])
+
+    r = {}
+    r['stats'] = stats
+    r['fixtures'] = fixtures
+
+    return flask.render_template('stats/layout.html', result=r)
+
+
+@trols_munger_ui.app.route('/munger/results')
+def results():
+    terms = query_terms_to_dict(flask.request.url)
+
+    db = trols_munger_ui.get_db()
+    reporter = trols_stats.interface.Reporter(db=db)
+
+    fixtures = {}
+    if terms.get('token') is not None:
+        token = terms.get('token')[0]
+        singles = [x() for x in reporter.get_player_singles(token)]
+        doubles = [x() for x in reporter.get_player_doubles(token)]
+        fixtures['singles'] = singles
+        fixtures['doubles'] = doubles
+
+        player_details = player_ids_dict([token])
+        if len(player_details):
+            fixtures.update(player_details[0])
+    trols_munger_ui.app.logger.debug('fixtures: %s', fixtures)
+
+    if terms.get('json') is not None and terms.get('json')[0] == 'true':
+        response = flask.json.jsonify(fixtures)
+    else:
+        response = flask.render_template('results/layout.html',
+                                         result=fixtures)
+
+    return response
 
 @trols_munger_ui.app.route('/munger/search')
 def search():

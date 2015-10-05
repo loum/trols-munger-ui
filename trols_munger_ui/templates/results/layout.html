@@ -89,122 +89,9 @@ R{{ round }} ({{ date }})
   </tr>
 </table>
 {%- endmacro %}
+
           {% extends "layout.html" %}
             {% block content %}
-            <div class="panel panel-default">
-              <!-- Default panel contents -->
-              {% for token, stats in result['stats'].iteritems() %}
-              <div class="panel-heading">
-                <b><i>Statistics for player: </i></b>
-                  <a href="/munger/players?q={{ stats['name'] | replace(' ', '+') }}">
-                    {{ stats['name'] }}
-                  </a>&nbsp;{{ stats['team'] }}&nbsp;Section&nbsp;{{ stats['section'] }}&nbsp;{{ stats['comp_type'] }}
-              </div>
-
-              <table class="table">
-                <tbody>
-                  <tr>
-                    <td> 
-                      <!-- Singles panel -->
-                      <div class="panel panel-info" style="font-size: small;">
-                        <div class="panel-heading">
-                          <a href="{{ url_for('munger', event='singles', type=stats['comp_type'], section=stats['section'], _anchor=stats['name']) }}">
-                            <b>Singles</b>
-                          </a>
-                        </div>
-
-                        <table class="table">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <strong>Sets played:</strong>
-                              </td>
-                              <td>
-                                {{ stats.singles['games_played'] }}
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <strong>Sets won/lost:</strong>
-                              </td>
-                              <td>
-                                {% set set_pc = 0 %}
-                                {% if stats.singles['games_lost'] > 0 %}
-                                  {% set set_pc = stats.singles['games_won'] / stats.singles['games_lost'] * 100 %}
-                                {% endif %}
-                                {{ stats.singles['games_won'] }}/{{ stats.singles['games_lost'] }}&nbsp;@&nbsp;{{ '%0.2f' % set_pc }}%
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <strong>Games won/lost:</strong>
-                              </td>
-                              <td>
-                                {% set score_pc = 0 %}
-                                {% if stats.singles['score_against'] > 0 %}
-                                  {% set score_pc = stats.singles['score_for'] / stats.singles['score_against'] * 100 %}
-                                {% endif %}
-                                {{ stats.singles['score_for'] }}/{{ stats.singles['score_against'] }}&nbsp;@&nbsp;{{ '%0.2f' % score_pc }}%
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </td> 
-
-                    <td> 
-                      <!-- Doubles panel -->
-                      <div class="panel panel-info" style="font-size: small;">
-                        <div class="panel-heading">
-                          <a href="{{ url_for('munger', event='doubles', type=stats['comp_type'], section=stats['section'], _anchor=stats['name']) }}">
-                            <b>Doubles</b>
-                          </a>
-                        </div>
-
-                        <table class="table">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <strong>Sets played:</strong>
-                              </td>
-                              <td>
-                                {{ stats.doubles['games_played'] }}
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <strong>Sets won/lost:</strong>
-                              </td>
-                              <td>
-                                {% set set_pc = 0 %}
-                                {% if stats.doubles['games_lost'] > 0 %}
-                                  {% set set_pc = stats.doubles['games_won'] / stats.doubles['games_lost'] * 100 %}
-                                {% endif %}
-                                {{ stats.doubles['games_won'] }}/{{ stats.doubles['games_lost'] }}&nbsp;@&nbsp;{{ '%0.2f' % set_pc }}%
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <strong>Games won/lost:</strong>
-                              </td>
-                              <td>
-                                {% set score_pc = 0 %}
-                                {% if stats.doubles['score_against'] > 0 %}
-                                  {% set score_pc = stats.doubles['score_for'] / stats.doubles['score_against'] * 100 %}
-                                {% endif %}
-                                {{ stats.doubles['score_for'] }}/{{ stats.doubles['score_against'] }}&nbsp;@&nbsp;{{ '%0.2f' % score_pc }}%
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </td> 
-                  </tr> 
-                </tbody>
-              </table>
-              {% endfor %}
-            </div>
-
             <div class="panel panel-default">
               <!-- Default panel contents -->
               <div class="panel-heading">
@@ -230,7 +117,7 @@ R{{ round }} ({{ date }})
     
                             <table class="table">
                               <tbody>
-                                {% for singles in result['fixtures']['singles'] %}
+                                {% for singles in result['singles'] %}
                                 <tr>
                                   <td class="col-xs-9">
                                     <div class="panel panel-info" style="padding: 0px">
@@ -284,7 +171,7 @@ R{{ round }} ({{ date }})
     
                             <table class="table" style="font-size: small">
                               <tbody>
-                                {% for doubles in result['fixtures']['doubles'] %}
+                                {% for doubles in result['doubles'] %}
                                 <tr>
                                   <td class="col-xs-9">
                                     <div class="panel panel-info" style="padding: 0px">
