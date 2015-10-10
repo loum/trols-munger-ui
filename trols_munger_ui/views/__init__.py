@@ -32,7 +32,7 @@ def google():
 
 @trols_munger_ui.app.route('/munger')
 def munger():
-    """Munger
+    """Munger.
     """
     db = trols_munger_ui.get_db()
     reporter = trols_stats.interface.Reporter(db=db)
@@ -136,11 +136,7 @@ def stats():
         if len(player_details):
             fixtures.update(player_details[0])
 
-    r = {}
-    r['stats'] = stats
-    r['fixtures'] = fixtures
-
-    return flask.render_template('stats/layout.html', result=r)
+    return flask.render_template('stats/layout.html', result=stats)
 
 
 @trols_munger_ui.app.route('/munger/results')
