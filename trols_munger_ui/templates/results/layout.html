@@ -90,138 +90,136 @@ R{{ round }} ({{ date }})
 </table>
 {%- endmacro %}
 
-          {% extends "layout.html" %}
-            {% block content %}
-            <div class="panel panel-default">
-              <!-- Default panel contents -->
+{% extends "layout.html" %}
+{% block content %}
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">
+    <b><i>Match Results for player: </i></b>
+    <a href="/munger/players?q={{ result['name'] | replace(' ', '+') }}">
+      {{ result['name'] }}
+    </a>&nbsp;{{ result['team'] }}&nbsp;Section&nbsp;{{ result['section'] }}&nbsp;{{ result['comp_type'] }}
+  </div>
+
+  <div class="panel-body">
+    <table class="table" style="margin-bottom: 0px;">
+      <tbody>
+        <tr>
+          <td class="col-xs-6">
+            <!-- Singles panel -->
+            <div class="panel panel-info">
               <div class="panel-heading">
-                <b><i>Match Results for player: </i></b>
-                <a href="/munger/players?q={{ result['name'] | replace(' ', '+') }}">
-                  {{ result['name'] }}
-                </a>&nbsp;{{ result['team'] }}&nbsp;Section&nbsp;{{ result['section'] }}&nbsp;{{ result['comp_type'] }}
+                <a href="{{ url_for('munger', event='singles', type=result['comp_type'], section=result['section'], _anchor=result['name']) }}">
+                  <b>Singles</b>
+                </a>
               </div>
 
-              <div class="panel-body">
-                <div>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <div class="col-xs-6">
-                          <!-- Singles panel -->
-                          <div class="panel panel-info">
-                            <div class="panel-heading">
-                              <a href="{{ url_for('munger', event='singles', type=result['comp_type'], section=result['section'], _anchor=result['name']) }}">
-                                <b>Singles</b>
-                              </a>
-                            </div>
-    
-                            <table class="table">
-                              <tbody>
-                                {% for singles in result['singles'] %}
-                                <tr>
-                                  <td class="col-xs-9">
-                                    <div class="panel panel-info" style="padding: 0px">
-                                      <div class="panel-heading" style="font-size: small;">
-                                        {{ result_hdr(singles.fixture.match_round,
-                                                      result['team'],
-                                                      singles.fixture.home_team,
-                                                      singles.fixture.away_team,
-                                                      singles.fixture.date) }}                                  
-                                      </div>
-                                      <div class="panel-body" style="font-size: small; padding: 0px">
-                                        <table class="table" style="margin-bottom: 0px;">
-                                          <tbody>
-                                            <tr>
-                                              <td class="col-xs-2">
-                                                {{ teams(singles.fixture.home_team, singles.fixture.away_team) }}
-                                              </td>
-                                              <td class="col-xs-9">
-                                                {{ singles_players(result['team'],
-                                                                   singles.fixture.home_team,
-                                                                   singles.player.name,
-                                                                   singles.opposition[0].name) }}
-                                              </td>
-                                              <td class="col-xs-1">
-                                                {{ scores(result['team'],
-                                                          singles.fixture.home_team,
-                                                          singles.score_for,
-                                                          singles.score_against) }}
-                                              </td>
-                                            </tr>
-                                          </tbody>
-                                        </table>
-                                      </div>
-                                    </div>
-                                  </td>
-                                </tr>
-                                {% endfor %}
-                              </tbody>
-                            </table>
-                          </div>
+              <table class="table">
+                <tbody>
+                  {% for singles in result['singles'] %}
+                  <tr>
+                    <td class="col-xs-9">
+                      <div class="panel panel-info" style="padding: 0px">
+                        <div class="panel-heading" style="font-size: small;">
+                          {{ result_hdr(singles.fixture.match_round,
+                                        result['team'],
+                                        singles.fixture.home_team,
+                                        singles.fixture.away_team,
+                                        singles.fixture.date) }}                                  
                         </div>
-  
-                        <div class="col-xs-6">
-                          <!-- Doubles panel -->
-                          <div class="panel panel-info">
-                            <div class="panel-heading">
-                              <a href="{{ url_for('munger', event='doubles', type=result['comp_type'], section=result['section'], _anchor=result['name']) }}">
-                                <b>Doubles</b>
-                              </a>
-                            </div>
-    
-                            <table class="table" style="font-size: small">
-                              <tbody>
-                                {% for doubles in result['doubles'] %}
-                                <tr>
-                                  <td class="col-xs-9">
-                                    <div class="panel panel-info" style="padding: 0px">
-                                      {%- if last_round != doubles.fixture.match_round %}
-                                      <div class="panel-heading" style="font-size: small;">
-                                        {{ result_hdr(doubles.fixture.match_round,
-                                                      result['team'],
-                                                      doubles.fixture.home_team,
-                                                      doubles.fixture.away_team,
-                                                      doubles.fixture.date) }}
-                                      </div>
-                                      {% endif -%}
-                                      <div class="panel-body" style="font-size: small; padding: 0px">
-                                        <table class="table" style="margin-bottom: 0px;">
-                                          <tbody>
-                                            <tr>
-                                              <td class="col-xs-2">
-                                                {{ teams(doubles.fixture.home_team, doubles.fixture.away_team) }}
-                                              </td>
-                                              <td class="col-xs-9">
-                                                {{ doubles_players(result['team'],
-                                                                   doubles.fixture.home_team,
-                                                                   doubles.player.name,
-                                                                   doubles.team_mate.name,
-                                                                   doubles.opposition[0].name,
-                                                                   doubles.opposition[1].name) }}
-                                              </td>
-                                              <td class="col-xs-1">
-                                                {{ scores(result['team'],
-                                                          doubles.fixture.home_team,
-                                                          doubles.score_for,
-                                                          doubles.score_against) }}
-                                              </td>
-                                            </tr>
-                                          </tbody>
-                                        </table>
-                                      </div>
-                                    </div>
-                                  </td>
-                                </tr>
-                                {% set last_round = doubles.fixture.match_round %}
-                                {% endfor %}
-                              </tbody>
-                            </table>
-                          </div>
+                        <div class="panel-body" style="font-size: small; padding: 0px">
+                          <table class="table" style="margin-bottom: 0px;">
+                            <tbody>
+                              <tr>
+                                <td class="col-xs-4">
+                                  {{ teams(singles.fixture.home_team, singles.fixture.away_team) }}
+                                </td>
+                                <td class="col-xs-9">
+                                  {{ singles_players(result['team'],
+                                                     singles.fixture.home_team,
+                                                     singles.player.name,
+                                                     singles.opposition[0].name) }}
+                                </td>
+                                <td class="col-xs-1">
+                                  {{ scores(result['team'],
+                                            singles.fixture.home_team,
+                                            singles.score_for,
+                                            singles.score_against) }}
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
                         </div>
-                      </td> 
-                    </tr> 
-                  </tbody>
-                </div>
-              </div">
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
             </div>
-            {% endblock content %}
+          </td>
+  
+          <td class="col-xs-6">
+            <!-- Doubles panel -->
+            <div class="panel panel-info">
+              <div class="panel-heading">
+                <a href="{{ url_for('munger', event='doubles', type=result['comp_type'], section=result['section'], _anchor=result['name']) }}">
+                  <b>Doubles</b>
+                </a>
+              </div>
+
+              <table class="table" style="font-size: small">
+                <tbody>
+                  {% for doubles in result['doubles'] %}
+                  <tr>
+                    <td class="col-xs-9">
+                      <div class="panel panel-info" style="padding: 0px">
+                        {%- if last_round != doubles.fixture.match_round %}
+                        <div class="panel-heading" style="font-size: small;">
+                          {{ result_hdr(doubles.fixture.match_round,
+                                        result['team'],
+                                        doubles.fixture.home_team,
+                                        doubles.fixture.away_team,
+                                        doubles.fixture.date) }}
+                        </div>
+                        {% endif -%}
+                        <div class="panel-body" style="font-size: small; padding: 0px">
+                          <table class="table" style="margin-bottom: 0px;">
+                            <tbody>
+                              <tr>
+                                <td class="col-xs-4">
+                                  {{ teams(doubles.fixture.home_team, doubles.fixture.away_team) }}
+                                </td>
+                                <td class="col-xs-9">
+                                  {{ doubles_players(result['team'],
+                                                     doubles.fixture.home_team,
+                                                     doubles.player.name,
+                                                     doubles.team_mate.name,
+                                                     doubles.opposition[0].name,
+                                                     doubles.opposition[1].name) }}
+                                </td>
+                                <td class="col-xs-1">
+                                  {{ scores(result['team'],
+                                            doubles.fixture.home_team,
+                                            doubles.score_for,
+                                            doubles.score_against) }}
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  {% set last_round = doubles.fixture.match_round %}
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </td> 
+        </tr> 
+      </tbody>
+    </table">
+  </div>
+</div>
+{% endblock content %}
