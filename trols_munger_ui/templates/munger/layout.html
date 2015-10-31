@@ -209,7 +209,13 @@
                               {% if player[1].last_fixture|length %}
                               <tr>
                                 <td class="col-xs-5">
-                                  <strong>Last played: R{{ player[1].last_fixture[0].fixture.match_round }} ({{ player[1].last_fixture[0].fixture.date }})</strong>
+                                  {% set last_played = player[1].last_fixture[0].fixture.match_round %}
+                                  {% set last_played_date = "" %}
+                                  {% if last_played in range(1, 15) %}
+                                    {% set last_played = "Round " ~ last_played %}
+                                    {% set last_played_date = " (" ~ player[1].last_fixture[0].fixture.date ~ ")" %}
+                                  {% endif %}
+                                  <strong>{{ last_played }}{{ last_played_date }}:</strong>
                                 </td>
                                 <td class="col-xs-7">
                                   {% for fixture in player[1].last_fixture %}
