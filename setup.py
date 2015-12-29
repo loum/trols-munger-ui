@@ -7,7 +7,7 @@ import fnmatch
 import shutil
 from setuptools import setup
 
-VERSION = '0.0.10'
+VERSION = '0.0.11'
 
 
 def opj(*args):

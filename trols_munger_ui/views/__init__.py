@@ -100,14 +100,16 @@ def players(league='nejta', year='2015', season='spring'):
     reporter = trols_stats.interface.Reporter(db=db)
 
     players = []
-    if terms.get('q') is not None:
-        players = reporter.get_players(names=terms.get('q'),
-                                       competition=competition)
-        trols_munger_ui.app.logger.debug('Players: "%s"', players)
-
     search_terms = str()
     if terms.get('q') is not None:
         search_terms = ' '.join(terms.get('q'))
+
+        players = reporter.get_players(names=terms.get('q'),
+                                       competition=competition)
+        for search_team in terms.get('q'):
+            players.extend(reporter.get_players(team=search_team,
+                                                competition=competition))
+        trols_munger_ui.app.logger.debug('Players: "%s"', players)
 
     return flask.render_template('players/layout.html',
                                  result=player_ids_dict(players),
