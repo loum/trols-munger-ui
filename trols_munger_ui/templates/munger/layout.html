@@ -1,3 +1,11 @@
+{% macro search_link(token, player) -%}
+<a id="{{ player.name | replace(' ', '%20') }}"
+   href="{{ url_for('stats', token=token) }}">
+  {{ player.name }}
+</a>
+({{ player.team }})
+{%- endmacro %}
+
           {% extends "layout.html" %}
 
     {% block custom_head_js %}
@@ -156,101 +164,98 @@
                 </form>
               </div>
 
-              <table class="table" style="margin-bottom: 0px;">
+              <table class="table table-striped"
+                     style="margin-bottom: 0px;">
+
+                <thead>
+                  <tr>
+                    <th class="col-xs-1">&nbsp;</th>
+                    <th class="col-xs-3">
+                      Player (Section {{ result.section }})
+                    </th>
+                    <th class="col-xs-2">
+                      {{ result.event | capitalize }} matches<br>(won/lost %)
+                    </th>
+                    <th class="col-xs-2">
+                      Games Totals<br>won/lost (%)
+                    </th>
+                    <th class="col-xs-3">
+                      Last Played
+                    </th>
+                    <th class="col-xs-1">&nbsp;</th>
+                  </tr>
+                </thead>
+
                 <tbody>
                   {% set position = 1 %}
                   {% for player in result.players %}
+                  {% if player[1][result.event]['games_played'] > 0 %}
                   <tr>
+                    <!-- Rank -->
                     <td> 
-                      <div class="panel panel-info" style="font-size: small; padding: 0px">
-                        <div class="panel-heading">
-                          <b>{{ position }}.&nbsp;</b>
-                          <a id="{{ player[1].name | replace(' ', '%20') }}"
-                             href="{{ url_for('stats', token=player[0]) }}">
-                            {{ player[1].name }}
-                          </a>
-                          &nbsp;({{ player[1].team }})&nbsp;Section&nbsp;{{ player[1].section }}
-                          <span class="pull-right">
-                            <a href="#">
-                              <img alt="top"
-                                   src="{{ url_for('static', filename='images/arrow-up.png') }}"
-                                   width="20">
-                            </a>
-                          </span>
-                        </div>
+                      <b>{{ position }}</b>
+                    </td>
 
-                        <div class="panel-body" style="font-size: small; padding: 0px">
-                          <table class="table" style="margin-bottom: 0px;">
-                            <tbody>
-                              <tr>
-                                <td class="col-xs-5">
-                                  <strong>Sets ({{ result.event }}) won/lost:</strong>
-                                </td>
-                                <td class="col-xs-7">
-                                  {% set set_pc = 0 %}
-                                  {% if player[1][result.event]['games_lost'] > 0 %}
-                                  {% set set_pc = player[1][result.event]['games_won'] / player[1][result.event]['games_lost'] * 100 %}
-                                  {% endif %}
-                                  {{ player[1][result.event]['games_played'] }} for {{ player[1][result.event]['games_won'] }}/{{ player[1][result.event]['games_lost'] }} @ {{ '%0.2f' % set_pc }}%
-                                </td>
-                              </tr>
-                              <tr>
-                                <td class="col-xs-5">
-                                  <strong>Games won/lost:</strong>
-                                </td>
-                                <td class="col-xs-7">
-                                  {% set set_pc = 0 %}
-                                  {% if player[1][result.event]['score_against'] > 0 %}
-                                  {% set set_pc = player[1][result.event]['score_for'] / player[1][result.event]['score_against'] * 100 %}
-                                  {% endif %}
-                                  {{ player[1][result.event]['score_for'] }}/{{ player[1][result.event]['score_against'] }} @ {{ '%0.2f' % set_pc }}%
-                                </td>
-                              </tr>
-                              {% if player[1].last_fixture|length %}
-                              <tr>
-                                <td class="col-xs-5">
-                                  {% set last_played = player[1].last_fixture[0].fixture.match_round %}
-                                  {% set last_played_date = "" %}
-                                  {% if last_played in range(1, 15) %}
-                                    {% set last_played = "Round " ~ last_played %}
-                                    {% set last_played_date = " (" ~ player[1].last_fixture[0].fixture.date ~ ")" %}
-                                  {% endif %}
-                                  <strong>{{ last_played }}{{ last_played_date }}:</strong>
-                                </td>
-                                <td class="col-xs-7">
-                                  {% for fixture in player[1].last_fixture %}
-                                  {% if fixture.score_against == 6 %}
-                                  <span style="color:red">
-                                  {% endif %}
-                                    {{ fixture.score_for }}-{{ fixture.score_against }}
-                                  {% if fixture.score_against == 6 %}
-                                  </span>
-                                  {% endif %}
-                                  {% endfor %}
-  
-                                  <!-- Last fixture home or away -->
-                                  {% set home_team = player[1].last_fixture[0].fixture.home_team %}
-                                  {% if player[1].team == home_team %}
-                                  hosting {{  player[1].last_fixture[0].fixture.away_team }}
-                                  {% else %}
-                                  @ {{  player[1].last_fixture[0].fixture.home_team }}
-                                  {% endif %}
+                    <!-- Player -->
+                    <td> 
+                      {{ search_link(player[0], player[1]) }}
+                    </td>
 
-                                  <span class="pull-right">
-                                    <a href="{{ url_for('results', token=player[0]) }}">
-                                      <img alt="Scores" src="{{ url_for('static', filename='images/scores.png') }}" width="80%">
-                                    </a>
-                                  </span>
-                                </td>
-                              </tr>
-                              {% endif %}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    </td> 
-                  </tr> 
+                    <!-- Matches won/lost -->
+                    <td> 
+                      {% set set_pc = 0 %}
+                      {% if player[1][result.event]['games_lost'] > 0 %}
+                      {% set set_pc = player[1][result.event]['games_won'] / player[1][result.event]['games_lost'] * 100 %}
+                      {% endif %}
+                      {{ player[1][result.event]['games_played'] }} ({{ player[1][result.event]['games_won'] }}/{{ player[1][result.event]['games_lost'] }} {{ '%0.2f' % set_pc }}%)
+                    </td>
+
+                    <!-- Games won/lost -->
+                    <td>
+                      {% set set_pc = 0 %}
+                      {% if player[1][result.event]['score_against'] > 0 %}
+                      {% set set_pc = player[1][result.event]['score_for'] / player[1][result.event]['score_against'] * 100 %}
+                      {% endif %}
+                      {{ player[1][result.event]['score_for'] }}/{{ player[1][result.event]['score_against'] }} ({{ '%0.2f' % set_pc }}%)
+                    </td>
+
+                    <!-- Last played -->
+                    {% if player[1].last_fixture | length %}
+                    <td>
+                      {% set last_played = player[1].last_fixture[0].fixture.match_round %}
+                      {% set last_played_date = "" %}
+                      {% if last_played in range(1, 15) %}
+                        {% set last_played = "R" ~ last_played %}
+                      {% endif %}
+                      {% for fixture in player[1].last_fixture %}
+                      {% if fixture.score_against == 6 %}
+                      <span style="color:red">
+                      {% endif %}
+                        {{ fixture.score_for }}-{{ fixture.score_against }}
+                      {% if fixture.score_against == 6 %}
+                      </span>
+                      {% endif %}
+                      {% endfor %}
+
+                      {% set home_team = player[1].last_fixture[0].fixture.home_team %}
+                      {% if player[1].team == home_team %}
+                      hosting {{  player[1].last_fixture[0].fixture.away_team }}
+                      {% else %}
+                      @ {{  player[1].last_fixture[0].fixture.home_team }}
+                      {% endif %}
+                      ({{ last_played }}{{ last_played_date }})
+                    {% endif %}
+                    </td>
+
+                    <!-- Match results link -->
+                    <td>
+                      <a href="{{ url_for('results', token=player[0]) }}">
+                        <img alt="Scores" src="{{ url_for('static', filename='images/scores.png') }}" width="30%">
+                      </a>
+                    </td>
+                  </tr>
                   {% set position = position + 1 %}
+                  {% endif %}
                   {% endfor %}
                 </tbody>
               </table>

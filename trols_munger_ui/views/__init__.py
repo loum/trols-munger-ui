@@ -80,9 +80,13 @@ def munger():
         stats['section'] = section
         stats['team'] = team
         stats['players'] = filtered_stats
-    trols_munger_ui.app.logger.debug('stats: %s', stats)
 
-    return flask.render_template('munger/layout.html', result=stats)
+    if terms.get('json') is not None and terms.get('json')[0] == 'true':
+        response = flask.json.jsonify(stats)
+    else:
+        response = flask.render_template('munger/layout.html', result=stats)
+
+    return response
 
 
 @trols_munger_ui.app.route('/munger/players')
@@ -148,24 +152,20 @@ def results():
     db = trols_munger_ui.get_db()
     reporter = trols_stats.interface.Reporter(db=db)
 
-    fixtures = {}
+    match_results = {}
     if terms.get('token') is not None:
         token = terms.get('token')[0]
-        singles = [x() for x in reporter.get_player_singles(token)]
-        doubles = [x() for x in reporter.get_player_doubles(token)]
-        fixtures['singles'] = singles
-        fixtures['doubles'] = doubles
+        match_results = reporter.get_player_results_compact([token])
 
         player_details = player_ids_dict([token])
         if len(player_details):
-            fixtures.update(player_details[0])
-    trols_munger_ui.app.logger.debug('fixtures: %s', fixtures)
+            match_results[token].update(player_details[0])
 
     if terms.get('json') is not None and terms.get('json')[0] == 'true':
-        response = flask.json.jsonify(fixtures)
+        response = flask.json.jsonify(match_results)
     else:
         response = flask.render_template('results/layout.html',
-                                         result=fixtures)
+                                         result=match_results)
 
     return response
 

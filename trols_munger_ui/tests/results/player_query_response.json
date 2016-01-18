@@ -2,6 +2,7 @@
   "players": [
     {
       "comp": "saturday_am_autumn_2015", 
+      "comp_string": "Saturday AM Autumn 2015", 
       "comp_type": "girls", 
       "name": "Isabella Markovski", 
       "section": "14", 
@@ -10,6 +11,7 @@
     }, 
     {
       "comp": "saturday_am_spring_2015", 
+      "comp_string": "Saturday AM Spring 2015", 
       "comp_type": "girls", 
       "name": "Isabella Markovski", 
       "section": "12", 

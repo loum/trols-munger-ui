@@ -20,10 +20,6 @@ header[role="banner"] {
   border-top: none !important; 
 }
 
-.table>tbody>tr>td {
-  padding: 6px;
-}
-
 .panel {
     margin-bottom: 0;
 }

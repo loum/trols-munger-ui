@@ -1,10 +1,13 @@
-{% macro result_hdr(round, team, f_home_team, f_away_team, date) -%}
-R{{ round }} ({{ date }})
-{% if team == f_home_team %}
-  hosting {{ f_away_team }}
-{% else %}
-  @ {{ f_home_team }}
-{% endif %}
+{% macro result_hdr(result) -%}
+Round: {{ result['match_round'] }}
+{{ result['home_team'] }} vs. {{ result['away_team'] }}
+({{ result['date_played'].strftime('%d %B %Y') }})
+{%- endmacro %}
+
+{% macro search_link(player_name) -%}
+<a href="{{ url_for('players', q=player_name) }}">
+  {{ player_name }} 
+</a>
 {%- endmacro %}
 
 {% macro teams(home_team, away_team) -%}
@@ -22,204 +25,110 @@ R{{ round }} ({{ date }})
 </table>
 {%- endmacro %}
 
-{% macro singles_players(team, f_home_team, player, opposition) -%}
-<table class="table" style="margin-bottom: 0px;">
-  <tr>
-    <td>
-      {%- if team == f_home_team %}
-      <strong>{{ player }}</strong>
-      {% else %}
-      {{ opposition }}
-      {% endif -%}
-    </td>
-  </tr>
-  <tr>
-    <td>
-      {%- if team == f_home_team %}
-      {{ opposition }}
-      {% else %}
-      <strong>{{ player }}</strong>
-      {% endif -%}
-    </td>
-  </tr>
-</table>
+{% macro dump_singles(result) -%}
+{% if result.player_won == True %}
+<tr class="success">
+{% elif result.score_against == 6 %}
+<tr class="danger">
+{% endif %}
+  <td>
+    {%- if result.player_team == result.home_team %}
+    <strong>
+      {{ search_link(result['player']) }}
+    </strong>
+    - {{ search_link(result.opposition[0]) }}
+    {% else %}
+    {{ search_link(result.opposition[0]) }}
+    -
+    <strong>
+        {{ search_link(result.player) }}
+    </strong>
+    {% endif -%}
+  </td>
+  <td class="col-xs-3">
+    {%- if result.player_team == result.home_team %}
+    {{ result.score_for }} - {{ result.score_against }}
+    {% else %}
+    {{ result.score_against }} - {{ result.score_for }}
+    {% endif %}
+  </td>
+</tr>
 {%- endmacro %}
 
-{% macro doubles_players(team, f_home_team, player, team_mate, opposition_1, opposition_2) -%}
-<table class="table" style="margin-bottom: 0px;">
-  <tr>
-    <td>
-      {%- if team == f_home_team %}
-      <strong>{{ player }} / {{ team_mate }}</strong>
-      {% else %}
-      {{ opposition_1 }} / {{ opposition_2 }}
-      {% endif -%}
-    </td>
-  </tr>
-  <tr>
-    <td>
-      {%- if team == f_home_team %}
-      {{ opposition_1 }} / {{ opposition_2 }}
-      {% else %}
-      <strong>{{ player }} / {{ team_mate }}</strong>
-      {% endif -%}
-    </td>
-  </tr>
-</table>
-{%- endmacro %}
-
-{% macro scores(team, f_home_team, score_for, score_against) -%}
-<table class="table" style="margin-bottom: 0px;">
-  <tr>
-    <td>
-      {%- if team == f_home_team %}
-      <strong>{{ score_for }}</strong>
-      {% else %}
-      {{ score_against }}
-      {% endif -%}
-    </td>
-  </tr>
-    <td>
-      {%- if team == f_home_team %}
-      {{ score_against }}
-      {% else %}
-      <strong>{{ score_for }}</strong>
-      {% endif -%}
-    </td>
-  </tr>
-</table>
+{% macro dump_doubles(result) -%}
+{% if result.player_won == True %}
+<tr class="success">
+{% elif result.score_against == 6 %}
+<tr class="danger">
+{% endif %}
+  <td class="col-xs-9">
+    {%- if result.player_team == result.home_team %}
+    <strong>
+      {{ search_link(result['player']) }}
+      /
+      {{ search_link(result['team_mate']) }}
+    </strong>
+    -
+    {{ search_link(result.opposition[0]) }}
+    /
+    {{ search_link(result.opposition[1]) }}
+    {% else %}
+    {{ search_link(result.opposition[0]) }}
+    /
+    {{ search_link(result.opposition[1]) }}
+    -
+    <strong>
+      {{ search_link(result.player) }}
+      /
+      {{ search_link(result.team_mate) }}
+    </strong>
+    {% endif -%}
+  </td>
+  <td class="col-xs-3">
+    {%- if result.player_team == result.home_team %}
+    {{ result.score_for }} - {{ result.score_against }}
+    {% else %}
+    {{ result.score_against }} - {{ result.score_for }}
+    {% endif %}
+  </td>
+</tr>
 {%- endmacro %}
 
 {% extends "layout.html" %}
 {% block content %}
-<div class="panel panel-default">
-  <!-- Default panel contents -->
-  <div class="panel-heading">
-    <b><i>Match Results for player: </i></b>
-    <a href="/munger/players?q={{ result['name'] | replace(' ', '+') }}">
-      {{ result['name'] }}
-    </a>&nbsp;{{ result['team'] }}&nbsp;Section&nbsp;{{ result['section'] }}&nbsp;{{ result['comp_type'] }}
-  </div>
 
-  <div class="panel-body">
-    <table class="table" style="margin-bottom: 0px;">
-      <tbody>
-        <tr>
-          <td class="col-xs-6">
-            <!-- Singles panel -->
-            <div class="panel panel-info">
-              <div class="panel-heading">
-                <a href="{{ url_for('munger', event='singles', type=result['comp_type'], section=result['section'], _anchor=result['name']) }}">
-                  <b>Singles</b>
-                </a>
-              </div>
-
-              <table class="table">
-                <tbody>
-                  {% for singles in result['singles'] %}
-                  <tr>
-                    <td class="col-xs-9">
-                      <div class="panel panel-info" style="padding: 0px">
-                        <div class="panel-heading" style="font-size: small;">
-                          {{ result_hdr(singles.fixture.match_round,
-                                        result['team'],
-                                        singles.fixture.home_team,
-                                        singles.fixture.away_team,
-                                        singles.fixture.date) }}                                  
-                        </div>
-                        <div class="panel-body" style="font-size: small; padding: 0px">
-                          <table class="table" style="margin-bottom: 0px;">
-                            <tbody>
-                              <tr>
-                                <td class="col-xs-4">
-                                  {{ teams(singles.fixture.home_team, singles.fixture.away_team) }}
-                                </td>
-                                <td class="col-xs-9">
-                                  {{ singles_players(result['team'],
-                                                     singles.fixture.home_team,
-                                                     singles.player.name,
-                                                     singles.opposition[0].name) }}
-                                </td>
-                                <td class="col-xs-1">
-                                  {{ scores(result['team'],
-                                            singles.fixture.home_team,
-                                            singles.score_for,
-                                            singles.score_against) }}
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-          </td>
-  
-          <td class="col-xs-6">
-            <!-- Doubles panel -->
-            <div class="panel panel-info">
-              <div class="panel-heading">
-                <a href="{{ url_for('munger', event='doubles', type=result['comp_type'], section=result['section'], _anchor=result['name']) }}">
-                  <b>Doubles</b>
-                </a>
-              </div>
-
-              <table class="table" style="font-size: small">
-                <tbody>
-                  {% for doubles in result['doubles'] %}
-                  <tr>
-                    <td class="col-xs-9">
-                      <div class="panel panel-info" style="padding: 0px">
-                        {%- if last_round != doubles.fixture.match_round %}
-                        <div class="panel-heading" style="font-size: small;">
-                          {{ result_hdr(doubles.fixture.match_round,
-                                        result['team'],
-                                        doubles.fixture.home_team,
-                                        doubles.fixture.away_team,
-                                        doubles.fixture.date) }}
-                        </div>
-                        {% endif -%}
-                        <div class="panel-body" style="font-size: small; padding: 0px">
-                          <table class="table" style="margin-bottom: 0px;">
-                            <tbody>
-                              <tr>
-                                <td class="col-xs-4">
-                                  {{ teams(doubles.fixture.home_team, doubles.fixture.away_team) }}
-                                </td>
-                                <td class="col-xs-9">
-                                  {{ doubles_players(result['team'],
-                                                     doubles.fixture.home_team,
-                                                     doubles.player.name,
-                                                     doubles.team_mate.name,
-                                                     doubles.opposition[0].name,
-                                                     doubles.opposition[1].name) }}
-                                </td>
-                                <td class="col-xs-1">
-                                  {{ scores(result['team'],
-                                            doubles.fixture.home_team,
-                                            doubles.score_for,
-                                            doubles.score_against) }}
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                  {% set last_round = doubles.fixture.match_round %}
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-          </td> 
-        </tr> 
-      </tbody>
-    </table">
-  </div>
-</div>
+{% for player_token, values in result.iteritems() %}
+  <h3>{{ search_link(values['name']) }}</h3>
+  <h4>
+    {{ values['team'] }} Section {{ values['section'] }} {{ values['comp_string'] }}
+  </h4>
+  {% for round_no, rounds in values.get('rounds').iteritems() %}
+  <table class="table table-condensed">
+    <thead>
+      <tr>
+        <th>
+          {{ result_hdr(rounds[0]) }}
+        </th>
+      </tr>
+    </thead>
+    <tr>
+      <td class="col-xs-9">
+        <div class="panel-body" style="font-size: small; padding: 0px">
+          <table class="table" style="margin-bottom: 0px;">
+            <tbody>
+              {% for r in rounds %}
+              {% if r.match_type == 'singles' %}
+              {{ dump_singles(r) }}
+              {% elif r.match_type == 'doubles' %}
+              {{ dump_doubles(r) }}
+              {% endif %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </td>
+    </tr>
+  </table>
+  {% endfor %}
+{% endfor %}
 {% endblock content %}

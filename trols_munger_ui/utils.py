@@ -42,14 +42,31 @@ def query_terms_to_dict(request, key_preamble=None):
         for key, value in tmp_query_strings.iteritems():
             query_strings['%s%s' % (key_preamble, key)] = value
 
-    log.debug('Parsed query strings: %s' % query_strings)
+    log.debug('Parsed query strings: %s', query_strings)
 
     return query_strings
 
 
 def player_ids_dict(player_ids):
+    """Helper method that splits the components of the token index
+    from *player_ids* list into separate parts.  For example::
+
+    >>> from trols_munder_ui.utils import player_ids_dict
+    >>> token = ('Isabella Markovski~Watsonia~12~girls~'
+    ...          'saturday_am_spring_2015')
+    >>> player_ids_dict([token])
+    [{'name': 'Isabella Markovski', 'comp_type': 'girls', 'section': '12',
+    'team': 'Watsonia', 'token': 'Isabella Markovski~Watsonia~12~girls~sa
+    turday_am_spring_2015', 'comp': 'saturday_am_spring_2015'}]
+
+    """
     def player_id_struct(player_id):
         (name, team, section, comp_type, comp) = player_id.split('~')
+        comp_parts = comp.split('_')
+        comp_string = '{} {} {} {}'.format(comp_parts[0].title(),
+                                           comp_parts[1].upper(),
+                                           comp_parts[2].title(),
+                                           comp_parts[3])
 
         return {
             'name': name,
@@ -57,6 +74,7 @@ def player_ids_dict(player_ids):
             'section': section,
             'comp_type': comp_type,
             'comp': comp,
+            'comp_string': comp_string,
             'token': player_id,
         }
 
