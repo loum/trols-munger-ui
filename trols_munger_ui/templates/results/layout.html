@@ -1,7 +1,9 @@
 {% macro result_hdr(result) -%}
 Round: {{ result['match_round'] }}
 {{ result['home_team'] }} vs. {{ result['away_team'] }}
+{% if result['date_played'] is not none %}
 ({{ result['date_played'].strftime('%d %B %Y') }})
+{% endif %}
 {%- endmacro %}
 
 {% macro search_link(player_name) -%}
