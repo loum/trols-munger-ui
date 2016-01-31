@@ -6,8 +6,7 @@ import os
 
 import trols_munger_ui
 import trols_stats.interface
-from trols_munger_ui.utils import (query_terms_to_dict,
-                                   player_ids_dict)
+from trols_munger_ui.utils import query_terms_to_dict
 from filer.files import get_file_time_in_utc
 
 
@@ -41,6 +40,10 @@ def munger():
 
     stats = {}
     if terms.keys():
+        competition = terms.get('competition')
+        if competition is not None:
+            competition = competition[0]
+
         section = terms.get('section')
         if section is not None:
             section = section[0]
@@ -60,12 +63,13 @@ def munger():
             team = team[0]
 
         kwargs = {
-            'competition': 'saturday_am_spring_2015',
+            'competition': competition,
             'competition_type': comp_type,
             'section': section,
             'team': team
         }
-        player_tokens = reporter.get_players(**kwargs)
+        player_details = reporter.get_players(**kwargs)
+        player_tokens = [x.get('token') for x in player_details]
         all_stats = reporter.get_player_stats(player_tokens,
                                               last_fixture=True,
                                               event=event)
@@ -75,6 +79,7 @@ def munger():
                                              reverse=True,
                                              limit=None)
 
+        stats['competition'] = competition
         stats['comp_type'] = comp_type
         stats['event'] = event
         stats['section'] = section
@@ -91,7 +96,7 @@ def munger():
 
 @trols_munger_ui.app.route('/munger/players')
 @trols_munger_ui.app.route('/munger/players/<league>/<year>/<season>')
-def players(league='nejta', year='2015', season='spring'):
+def players(league=None, year=None, season=None):
     terms = query_terms_to_dict(flask.request.url)
 
     competition = None
@@ -113,12 +118,20 @@ def players(league='nejta', year='2015', season='spring'):
         for search_team in terms.get('q'):
             players.extend(reporter.get_players(team=search_team,
                                                 competition=competition))
-        trols_munger_ui.app.logger.debug('Players: "%s"', players)
 
-    return flask.render_template('players/layout.html',
-                                 result=player_ids_dict(players),
-                                 search_terms=search_terms,
-                                 competition=competition)
+    result = {
+        'players': players,
+        'search_terms': search_terms,
+        'competition': competition,
+    }
+
+    if terms.get('json') is not None and terms.get('json')[0] == 'true':
+        response = flask.json.jsonify(result)
+    else:
+        response = flask.render_template('players/layout.html',
+                                         result=result)
+
+    return response
 
 
 @trols_munger_ui.app.route('/munger/stats')
@@ -130,19 +143,13 @@ def stats():
 
     stats = reporter.get_player_stats(terms.get('token'))
 
-    fixtures = {}
-    if terms.get('token') is not None:
-        token = terms.get('token')[0]
-        singles = [x() for x in reporter.get_player_singles(token)]
-        doubles = [x() for x in reporter.get_player_doubles(token)]
-        fixtures['singles'] = singles
-        fixtures['doubles'] = doubles
+    if terms.get('json') is not None and terms.get('json')[0] == 'true':
+        response = flask.json.jsonify(stats)
+    else:
+        response = flask.render_template('stats/layout.html',
+                                         result=stats)
 
-        player_details = player_ids_dict([token])
-        if len(player_details):
-            fixtures.update(player_details[0])
-
-    return flask.render_template('stats/layout.html', result=stats)
+    return response
 
 
 @trols_munger_ui.app.route('/munger/results')
@@ -157,7 +164,7 @@ def results():
         token = terms.get('token')[0]
         match_results = reporter.get_player_results_compact([token])
 
-        player_details = player_ids_dict([token])
+        player_details = reporter.player_ids_dict([token])
         if len(player_details):
             match_results[token].update(player_details[0])
 
@@ -168,20 +175,6 @@ def results():
                                          result=match_results)
 
     return response
-
-@trols_munger_ui.app.route('/munger/search')
-def search():
-    terms = query_terms_to_dict(flask.request.url)
-
-    db = trols_munger_ui.get_db()
-    reporter = trols_stats.interface.Reporter(db=db)
-
-    players = []
-    if terms.get('q') is not None:
-        players = reporter.get_players(terms.get('q'))
-        trols_munger_ui.app.logger.debug('Players: "%s"', players)
-
-    return flask.json.jsonify({'players': player_ids_dict(players)})
 
 
 @trols_munger_ui.app.route('/_last_update')

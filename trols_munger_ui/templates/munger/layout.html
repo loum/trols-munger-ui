@@ -16,7 +16,24 @@
     //<![CDATA[
     $(window).load(function() {
         $(document).ready(function() {
+            $('select[name=competition]').on('change', function() {
+                $('select[name=event] option[value!=""]').remove()
+                $('select[name=type] option[value!=""]').remove()
+                $('select[name=section] option[value!=""]').remove()
+                $('select[name=team] option[value!=""]').remove()
+            });
+        });
+    });
+    //]]>
+    </script>
+
+    <script type="text/javascript">
+    // Update teams when section changes.
+    //<![CDATA[
+    $(window).load(function() {
+        $(document).ready(function() {
             $('select[name=section]').on('change', function() {
+                var competition = $('select[name=competition]').val()
                 var section = $('select[name=section]').val()
                 var comp_type = $('select[name=type]').val()
                 if (comp_type == null) {
@@ -24,7 +41,7 @@
                 }
 
                 $('select[name=team] option[value!=""]').remove()
-                $.getJSON($SCRIPT_ROOT + '/_teams?competition=saturday_am_spring_2015&type=' + comp_type + '&section=' + section, function(data) {
+                $.getJSON($SCRIPT_ROOT + '/_teams?competition=' + competition + '&type=' + comp_type + '&section=' + section, function(data) {
                     $.each(data, function(key, value) {
                         $.each(value, function(idx, team) {
                             $('<option>').val(team).text(team).appendTo('select[name=team]');
@@ -41,6 +58,7 @@
     // Update teams on first load.
     //<![CDATA[
     $(document).ready(function() {
+        var competition = $('select[name=competition]').val()
         var section = $('select[name=section]').val()
         if (section == null) {
             section = ''
@@ -51,7 +69,7 @@
         }
         $('select[name=team] option[value!=""]').remove()
 
-        $.getJSON($SCRIPT_ROOT + '/_teams?competition=saturday_am_spring_2015&type=' + comp_type + '&section=' + section, function(data) {
+        $.getJSON($SCRIPT_ROOT + '/_teams?competition=' + competition + '&type=' + comp_type + '&section=' + section, function(data) {
             var selected_team = getUrlParameter('team');
             $.each(data, function(key, value) {
                 $.each(value, function(idx, team) {
@@ -73,13 +91,14 @@
     $(window).load(function() {
         $(document).ready(function() {
             $('select[name=type]').on('change', function() {
+                var competition = $('select[name=competition]').val()
                 var comp_type = $('select[name=type]').val()
                 var section = $('select[name=section]').val()
                 if (section == null) {
                     section = ''
                 }
                 $('select[name=section] option[value!=""]').remove()
-                $.getJSON($SCRIPT_ROOT + '/_sections?competition=saturday_am_spring_2015&type=' + comp_type, function(data) {
+                $.getJSON($SCRIPT_ROOT + '/_sections?competition=' + competition + '&type=' + comp_type, function(data) {
                     $.each(data, function(key, value) {
                         $.each(value, function(idx, section) {
                             $('<option>').val(section).text(section).appendTo('select[name=section]');
@@ -88,7 +107,7 @@
                 });
 
                 $('select[name=team] option[value!=""]').remove()
-                $.getJSON($SCRIPT_ROOT + '/_teams?competition=saturday_am_spring_2015&type=' + comp_type + '&section=' + section, function(data) {
+                $.getJSON($SCRIPT_ROOT + '/_teams?competition=' + competition + '&type=' + comp_type + '&section=' + section, function(data) {
                     $.each(data, function(key, value) {
                         $.each(value, function(idx, team) {
                             $('<option>').val(team).text(team).appendTo('select[name=team]');
@@ -103,163 +122,157 @@
 
     {% endblock custom_head_js %}
 
-          {% block tabs %}
-          <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
-            {% block saturday_am_spring_2015_search %}
-            <li class="active">
-              <a href="#"
-                 data-toggle="tab">
-                <strong>NEJTA Saturday AM Spring 2015</strong>
+    {% block content %}
+    <h4>Competition Search</h4>
+    <div class="panel panel-default">
+
+      <!-- Default panel contents -->
+      <div class="panel-heading">
+        <form class="form-inline" action="/munger" method="get">
+          <div class="form-group">
+            <!-- Competition -->
+            <select class="form-control" name="competition">
+              <option value="saturday_am_autumn_2016" {% if result.competition == "saturday_am_autumn_2016"%}selected{% endif %}>NEJTA Saturday AM Autumn 2016</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <select class="form-control" name="event">
+              <option value=""{% if not result.event %} selected disabled {% endif %}>Event</option>
+              <option value="singles" {% if result.event == "singles" %}selected{% endif %}>singles</option>
+              <option value="doubles" {% if result.event == "doubles" %}selected{% endif %}>doubles</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <select class="form-control" name="type">
+              <option value=""{% if not result.comp_type %} selected disabled{% endif %}>Event type</option>
+              <option value="boys" {% if result.comp_type == "boys" %}selected{% endif %}>boys</option>
+              <option value="girls" {% if result.comp_type == "girls" %}selected{% endif %}>girls</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <select class="form-control" name="section">
+              <option value=""{% if not result.section %} selected disabled{% endif %}>Section</option>
+              {% for section_no in range(1, 27) %}
+              <option value="{{ section_no }}" {% if result.section == section_no|string %}selected{% endif %}>{{ section_no }}</option>
+              {%- endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <select class="form-control" name="team">
+              <option value=""{% if not result.team %} selected disabled{% endif %}>Team</option>
+              {% if result.team %}
+              <option value="{{ result.team }}" selected>{{ result.team }}</option>
+              {% endif %}
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-success">
+            Get Rankings!
+          </button>
+        </form>
+      </div>
+
+      {% if result.get('players') is not none %}
+      <table class="table table-striped"
+             style="margin-bottom: 0px;">
+
+        <thead>
+          <tr>
+            <th class="col-xs-1">&nbsp;</th>
+            <th class="col-xs-3">
+              Player (Section {{ result.section }})
+            </th>
+            <th class="col-xs-2">
+              {{ result.event | capitalize }} matches<br>(won/lost %)
+            </th>
+            <th class="col-xs-2">
+              Games Totals<br>won/lost (%)
+            </th>
+            <th class="col-xs-3">
+              Last Played
+            </th>
+            <th class="col-xs-1">&nbsp;</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% set position = 1 %}
+          {% for player in result.players %}
+          {% if player[1][result.event]['games_played'] > 0 %}
+          <tr>
+            <!-- Rank -->
+            <td> 
+              <b>{{ position }}</b>
+            </td>
+
+            <!-- Player -->
+            <td> 
+              {{ search_link(player[0], player[1]) }}
+            </td>
+
+            <!-- Matches won/lost -->
+            <td> 
+              {% set set_pc = 0 %}
+              {% if player[1][result.event]['games_lost'] > 0 %}
+              {% set set_pc = player[1][result.event]['games_won'] / player[1][result.event]['games_lost'] * 100 %}
+              {% endif %}
+              {{ player[1][result.event]['games_played'] }} ({{ player[1][result.event]['games_won'] }}/{{ player[1][result.event]['games_lost'] }} {{ '%0.2f' % set_pc }}%)
+            </td>
+
+            <!-- Games won/lost -->
+            <td>
+              {% set set_pc = 0 %}
+              {% if player[1][result.event]['score_against'] > 0 %}
+              {% set set_pc = player[1][result.event]['score_for'] / player[1][result.event]['score_against'] * 100 %}
+              {% endif %}
+              {{ player[1][result.event]['score_for'] }}/{{ player[1][result.event]['score_against'] }} ({{ '%0.2f' % set_pc }}%)
+            </td>
+
+            <!-- Last played -->
+            {% if player[1].last_fixture | length %}
+            <td>
+              {% set last_played = player[1].last_fixture[0].fixture.match_round %}
+              {% set last_played_date = "" %}
+              {% if last_played in range(1, 15) %}
+                {% set last_played = "R" ~ last_played %}
+              {% endif %}
+              {% for fixture in player[1].last_fixture %}
+              {% if fixture.score_against == 6 %}
+              <span style="color:red">
+              {% endif %}
+                {{ fixture.score_for }}-{{ fixture.score_against }}
+              {% if fixture.score_against == 6 %}
+              </span>
+              {% endif %}
+              {% endfor %}
+
+              {% set home_team = player[1].last_fixture[0].fixture.home_team %}
+              {% if player[1].team == home_team %}
+              hosting {{  player[1].last_fixture[0].fixture.away_team }}
+              {% else %}
+              @ {{  player[1].last_fixture[0].fixture.home_team }}
+              {% endif %}
+              ({{ last_played }}{{ last_played_date }})
+            {% endif %}
+            </td>
+
+            <!-- Match results link -->
+            <td>
+              <a href="{{ url_for('results', token=player[0]) }}">
+                <img alt="Scores" src="{{ url_for('static', filename='images/scores.png') }}" width="30%">
               </a>
-            </li>
-            {% endblock saturday_am_spring_2015_search %}
+            </td>
+          </tr>
+          {% set position = position + 1 %}
+          {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endif %}
 
-            {% block saturday_am_autumn_2015_search %}
-            {% endblock saturday_am_autumn_2015_search %}
-          </ul>
-
-            {% block tab_content %}
-            <div class="panel panel-default">
-
-              <!-- Default panel contents -->
-              <div class="panel-heading">
-                <form class="form-inline" action="/munger" method="get">
-                  <div class="form-group">
-                    <select class="form-control" name="event">
-                      <option value=""{% if not result.event %} selected disabled {% endif %}>Event</option>
-                      <option value="singles" {% if result.event == "singles" %}selected{% endif %}>singles</option>
-                      <option value="doubles" {% if result.event == "doubles" %}selected{% endif %}>doubles</option>
-                    </select>
-                  </div>
-
-                  <div class="form-group">
-                    <select class="form-control" name="type">
-                      <option value=""{% if not result.comp_type %} selected disabled{% endif %}>Event type</option>
-                      <option value="boys" {% if result.comp_type == "boys" %}selected{% endif %}>boys</option>
-                      <option value="girls" {% if result.comp_type == "girls" %}selected{% endif %}>girls</option>
-                    </select>
-                  </div>
-
-                  <div class="form-group">
-                    <select class="form-control" name="section">
-                      <option value=""{% if not result.section %} selected disabled{% endif %}>Section</option>
-                      {% for section_no in range(1, 27) %}
-                      <option value="{{ section_no }}" {% if result.section == section_no|string %}selected{% endif %}>{{ section_no }}</option>
-                      {%- endfor %}
-                    </select>
-                  </div>
-
-                  <div class="form-group">
-                    <select class="form-control" name="team">
-                      <option value=""{% if not result.team %} selected disabled{% endif %}>Team</option>
-                      {% if result.team %}
-                      <option value="{{ result.team }}" selected>{{ result.team }}</option>
-                      {% endif %}
-                    </select>
-                  </div>
-
-                  <button type="submit" class="btn btn-success">
-                    Get Rankings!
-                  </button>
-                </form>
-              </div>
-
-              <table class="table table-striped"
-                     style="margin-bottom: 0px;">
-
-                <thead>
-                  <tr>
-                    <th class="col-xs-1">&nbsp;</th>
-                    <th class="col-xs-3">
-                      Player (Section {{ result.section }})
-                    </th>
-                    <th class="col-xs-2">
-                      {{ result.event | capitalize }} matches<br>(won/lost %)
-                    </th>
-                    <th class="col-xs-2">
-                      Games Totals<br>won/lost (%)
-                    </th>
-                    <th class="col-xs-3">
-                      Last Played
-                    </th>
-                    <th class="col-xs-1">&nbsp;</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {% set position = 1 %}
-                  {% for player in result.players %}
-                  {% if player[1][result.event]['games_played'] > 0 %}
-                  <tr>
-                    <!-- Rank -->
-                    <td> 
-                      <b>{{ position }}</b>
-                    </td>
-
-                    <!-- Player -->
-                    <td> 
-                      {{ search_link(player[0], player[1]) }}
-                    </td>
-
-                    <!-- Matches won/lost -->
-                    <td> 
-                      {% set set_pc = 0 %}
-                      {% if player[1][result.event]['games_lost'] > 0 %}
-                      {% set set_pc = player[1][result.event]['games_won'] / player[1][result.event]['games_lost'] * 100 %}
-                      {% endif %}
-                      {{ player[1][result.event]['games_played'] }} ({{ player[1][result.event]['games_won'] }}/{{ player[1][result.event]['games_lost'] }} {{ '%0.2f' % set_pc }}%)
-                    </td>
-
-                    <!-- Games won/lost -->
-                    <td>
-                      {% set set_pc = 0 %}
-                      {% if player[1][result.event]['score_against'] > 0 %}
-                      {% set set_pc = player[1][result.event]['score_for'] / player[1][result.event]['score_against'] * 100 %}
-                      {% endif %}
-                      {{ player[1][result.event]['score_for'] }}/{{ player[1][result.event]['score_against'] }} ({{ '%0.2f' % set_pc }}%)
-                    </td>
-
-                    <!-- Last played -->
-                    {% if player[1].last_fixture | length %}
-                    <td>
-                      {% set last_played = player[1].last_fixture[0].fixture.match_round %}
-                      {% set last_played_date = "" %}
-                      {% if last_played in range(1, 15) %}
-                        {% set last_played = "R" ~ last_played %}
-                      {% endif %}
-                      {% for fixture in player[1].last_fixture %}
-                      {% if fixture.score_against == 6 %}
-                      <span style="color:red">
-                      {% endif %}
-                        {{ fixture.score_for }}-{{ fixture.score_against }}
-                      {% if fixture.score_against == 6 %}
-                      </span>
-                      {% endif %}
-                      {% endfor %}
-
-                      {% set home_team = player[1].last_fixture[0].fixture.home_team %}
-                      {% if player[1].team == home_team %}
-                      hosting {{  player[1].last_fixture[0].fixture.away_team }}
-                      {% else %}
-                      @ {{  player[1].last_fixture[0].fixture.home_team }}
-                      {% endif %}
-                      ({{ last_played }}{{ last_played_date }})
-                    {% endif %}
-                    </td>
-
-                    <!-- Match results link -->
-                    <td>
-                      <a href="{{ url_for('results', token=player[0]) }}">
-                        <img alt="Scores" src="{{ url_for('static', filename='images/scores.png') }}" width="30%">
-                      </a>
-                    </td>
-                  </tr>
-                  {% set position = position + 1 %}
-                  {% endif %}
-                  {% endfor %}
-                </tbody>
-              </table>
-
-            </div>
-            {% endblock tab_content %}
-          {% endblock tabs %}
+    </div>
+    {% endblock content %}

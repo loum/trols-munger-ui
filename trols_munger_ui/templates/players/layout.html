@@ -1,37 +1,45 @@
-          {% extends "layout.html" %}
+{% extends "layout.html" %}
+{% set search_placeholder = '%s' % result.search_terms if result.get('search_terms') is not none %}
+{% block saturday_am_autumn_2015_search %}{% endblock %}
+{% block saturday_am_spring_2015_search %}{% endblock %}
 
-            {% block saturday_am_spring_2015_search %}
-            {% if competition == 'saturday_am_spring_2015' %}
-            <li class="active">
-            {% else %}
-            <li>
-            {% endif %}
+{% block content %}
 
-              {% if competition == 'saturday_am_spring_2015' %}
-              <a href="#">
-              {% else %}
-              <a href="/munger/players/nejta/2015/spring?q={{ search_terms }}">
-              {% endif %}
-                <strong>NEJTA Saturday AM Spring 2015</strong>
-              </a>
-            </li>
-            {% endblock saturday_am_spring_2015_search %}
+{% if result.players|length %}
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th class="col-xs-4">Competition</th>
+      <th class="col-xs-3">Player</th>
+      <th class="col-xs-3">Team</th>
+      <th class="col-xs-2">Section #</th>
+    </tr>
+  </thead>
 
-            {% block saturday_am_autumn_2015_search %}
-            {% if competition == 'saturday_am_autumn_2015' %}
-            <li class="active">
-            {% else %}
-            <li>
-            {% endif %}
-              {% if competition == 'saturday_am_autumn_2015' %}
-              <a href="#">
-              {% else %}
-              <a href="/munger/players/nejta/2015/autumn?q={{ search_terms }}">
-              {% endif %}
-                <strong>NEJTA Saturday AM Autumn 2015</strong>
-              </a>
-            </li>
-            {% endblock saturday_am_autumn_2015_search %}
+  <tbody>
+  {% for player in result.players %}
+    <tr>
+      <td>
+        {{ player.comp_string }}
+      </td>
+      <td>
+        <a href="{{ url_for('stats', token=player.token) }}">
+          {{ player.name }}
+        </a>
+      </td>
+      <td>
+        {{ player.team }}&nbsp;{{ player.comp_type }}
+      </td>
+      <td>
+        {{ player.section }}
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+{% endblock content %}
 
             {% block tab_content %}
             <div class="panel panel-default">
@@ -44,6 +52,7 @@
               <table class="table" table-striped">
                 <thead>
                   <tr>
+                    <th>Competition</th>
                     <th>Name</th>
                     <th>Team</th>
                     <th>Section #</th>

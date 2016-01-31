@@ -1,5 +1,6 @@
 {
-  "players": [
+  "competition": "saturday_am_spring_2015", 
+  "result": [
     {
       "comp": "saturday_am_autumn_2015", 
       "comp_string": "Saturday AM Autumn 2015", 
@@ -36,5 +37,6 @@
       "team": "Watsonia", 
       "token": "Joel Markovski~Watsonia~21~boys~saturday_am_spring_2015"
     }
-  ]
+  ],
+  "search_terms": "Markovski"
 }

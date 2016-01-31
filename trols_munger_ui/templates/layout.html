@@ -60,6 +60,8 @@
   </head>
 
   <body>
+  {% set search_placeholder = '%s' % search_placeholder|default('Players, Team ...') %}
+
     <nav class="navbar navbar-default">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -82,7 +84,11 @@
                 <input name="q"
                        type="text"
                        class="form-control"
-                       placeholder="Player ...">
+                       {% if search_placeholder == 'Players, Team ...'%}
+                       placeholder="{{ search_placeholder }}">
+                       {% else %}
+                       value="{{ search_placeholder }}"> 
+                       {% endif %}
                 <div class="input-group-btn">
                     <button type="submit" class="btn btn-success">
                       <span class="glyphicon glyphicon-search"></span>
@@ -96,40 +102,10 @@
     </nav>
 
     <div class="container">
-      <div class="row-fluid">
-        {% block content %}
-        <div id="content">
-
-          {% block tabs %}
-          <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
-            {% block saturday_am_spring_2015_search %}
-            <li class="active">
-              <a href="#"
-                 data-toggle="tab">
-                <strong>NEJTA Saturday AM Spring 2015</strong>
-              </a>
-            </li>
-            {% endblock saturday_am_spring_2015_search %}
-
-            {% block saturday_am_autumn_2015_search %}
-            <li>
-              <a href="#"
-                 data-toggle="tab">
-                <strong>NEJTA Saturday AM Autumn 2015</strong>
-              </a>
-            </li>
-            {% endblock saturday_am_autumn_2015_search %}
-          </ul>
-          <div id="my-tab-content" class="tab-content">
-            {% block tab_content %}{% endblock tab_content %}
-            <div class="tab-pane active"
-                 id="netja_saturday_am_spring_2015">
-            </div>
-          </div>
-          {% endblock tabs %}
-        </div>
-      </div>
+      <div id="content">
+      {% block content %}
       {% endblock content %}
+      </div>
     </div>
 
     <!-- Bootstrap core JavaScript

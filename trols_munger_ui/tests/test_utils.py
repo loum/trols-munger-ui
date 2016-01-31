@@ -1,8 +1,7 @@
 import unittest2
 import urllib
 
-from trols_munger_ui.utils import (query_terms_to_dict,
-                                   player_ids_dict)
+from trols_munger_ui.utils import query_terms_to_dict
 
 
 class TestUtils(unittest2.TestCase):
@@ -56,41 +55,3 @@ class TestUtils(unittest2.TestCase):
         expected = {'metadata=q': ['Isabella']}
         msg = 'Single query term to dict conversion error'
         self.assertDictEqual(received, expected, msg)
-
-    def test_player_ids_dict(self):
-        """Test player_ids_dict.
-        """
-        # Given a list of player IDs
-        players = [
-            "John Guanzon~Epping~3~boys~saturday_am_spring_2015",
-            "Whitney Guan~Clifton~2~girls~saturday_am_spring_2015",
-        ]
-
-        # when I convert to a dictionary structure
-        received = player_ids_dict(players)
-
-        # then I should receive the correct list of dictionaries
-        expected = [
-            {
-                'comp': 'saturday_am_spring_2015',
-                'comp_string': 'Saturday AM Spring 2015',
-                'comp_type': 'boys',
-                'name': 'John Guanzon',
-                'section': '3',
-                'team': 'Epping',
-                'token':
-                    'John Guanzon~Epping~3~boys~saturday_am_spring_2015'
-            },
-            {
-                'comp': 'saturday_am_spring_2015',
-                'comp_string': 'Saturday AM Spring 2015',
-                'comp_type': 'girls',
-                'name': 'Whitney Guan',
-                'section': '2',
-                'team': 'Clifton',
-                'token':
-                    'Whitney Guan~Clifton~2~girls~saturday_am_spring_2015'
-            }
-        ]
-        msg = 'Player IDs to dict conversion error'
-        self.assertListEqual(received, expected, msg)

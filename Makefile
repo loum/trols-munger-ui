@@ -19,8 +19,9 @@ PYTHONPATH=.:../logga:../configa:../filer:../trols-stats
 # Note: for this to work you will need to import the test class into
 # the current namespace via "tests/__init__.py"
 TEST=trols_munger_ui.tests:TestHealth \
-	trols_munger_ui.tests:TestSearch \
 	trols_munger_ui.tests:TestUtils \
+	trols_munger_ui.tests:TestPlayers \
+	trols_munger_ui.tests:TestStats \
 	trols_munger_ui.tests:TestLastUpdate \
 	trols_munger_ui.tests:TestTeams \
 	trols_munger_ui.tests:TestSections

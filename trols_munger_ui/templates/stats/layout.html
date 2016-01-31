@@ -1,108 +1,74 @@
-{% macro display_stats(games_played, games_won, games_lost, score_for, score_against, ranking_url) -%}
-<tr>
-  <td><strong>Sets played:</strong></td>
-  <td>{{ games_played }}</td>
-</tr>
-<tr>
-  <td><strong>Sets won/lost:</strong></td>
-  <td>
-    {% set set_pc = 0 %}
-    {% if games_lost > 0 %}
-      {% set set_pc = games_won / games_lost * 100 %}
-    {% endif %}
-    {{ games_won }}/{{ games_lost }} @ {{ '%0.2f' % set_pc }}%
-  </td>
-</tr>
-<tr>
-  <td><strong>Games won/lost:</strong></td>
-  <td>
-    {% set score_pc = 0 %}
-    {% if score_against > 0 %}
-      {% set score_pc = score_for / score_against * 100 %}
-    {% endif %}
-    {{ score_for }}/{{ score_against }} @ {{ '%0.2f' % score_pc }}%
-    <span class="pull-right">
-      <a href="{{ ranking_url }}">
-        <img alt="Rankings" src="{{ url_for('static', filename='images/ranking.png') }}" width="90%">
-      </a>
-    </span>
-  </td>
-</tr>
+{% macro search_link(player_name) -%}
+<a href="{{ url_for('players', q=player_name) }}">
+  {{ player_name }}
+</a>
 {%- endmacro %}
 
 {% extends "layout.html" %}
 {% block content %}
-<div class="panel panel-default">
-  <!-- Default panel contents -->
-  {% for token, stats in result.iteritems() %}
-  <div class="panel-heading">
-    <b><i>Statistics for player: </i></b>
-    <a href="/munger/players?q={{ stats['name'] | replace(' ', '+') }}">
-      {{ stats['name'] }}
-    </a> {{ stats['team'] }} Section {{ stats['section'] }} {{ stats['comp_type'] }}
-  </div>
 
-  <div class="panel-body">
-    <table class="table" style="margin-bottom: 0px;">
-      <tbody>
-        <tr>
-          <td class="col-xs-6">
-            <!-- Singles panel -->
-            <div class="panel panel-info" style="padding: 0px;">
-              <div class="panel-heading">
-                <strong>Singles</strong>
-              </div>
-  
-              <div class="panel-body" style="font-size: small; padding: 0px">
-                <table class="table" style="margin-bottom: 0px;">
-                  <tbody>
-                    {% set ranking_url = url_for('munger',
-                                                 event='singles',
-                                                 type=stats['comp_type'],
-                                                 section=stats['section'],
-                                                 _anchor=stats['name']) -%}
-                    {{ display_stats(stats.singles['games_played'],
-                                     stats.singles['games_won'],
-                                     stats.singles['games_lost'],
-                                     stats.singles['score_for'],
-                                     stats.singles['score_against'],
-                                     ranking_url) }}
-                  </tbody>
-                </table>
-              </div>
-            </div> 
-          </td>
+{% for token, values in result.iteritems() %}
+<h3>{{ search_link(values.name) }}</h3>
+<h4>{{ values.team }} Section {{ values.section }} {{ values.comp_string }}</h4>
+<table class="table table-condensed">
+  <thead>
+    <tr>
+      <th class="col-xs-3"></th>
+      <th class="col-xs-2">
+        Sets Played
+      </th>
+      <th class="col-xs-3">
+        Sets won/lost:
+      </th>
+      <th class="col-xs-3">
+        Games won/lost
+      </th>
+      <th class="col-xs-1"></th>
+    </tr>
+  </thead>
 
-          <td class="col-xs-6">
-            <!-- Singles panel -->
-            <div class="panel panel-info" style="padding: 0px;">
-              <div class="panel-heading">
-                <strong>Doubles</strong>
-              </div>
-  
-              <div class="panel-body" style="font-size: small; padding: 0px">
-                <table class="table" style="margin-bottom: 0px;">
-                  <tbody>
-                    {% set ranking_url = url_for('munger',
-                                                 event='doubles',
-                                                 type=stats['comp_type'],
-                                                 section=stats['section'],
-                                                 _anchor=stats['name']) -%}
-                    {{ display_stats(stats.doubles['games_played'],
-                                     stats.doubles['games_won'],
-                                     stats.doubles['games_lost'],
-                                     stats.doubles['score_for'],
-                                     stats.doubles['score_against'],
-                                     ranking_url) }}
-                  </tbody>
-                </table>
-              </div>
-            </div> 
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  {% for event_type in ['singles', 'doubles'] %}
+  {% if values[event_type] is not none %}
+  {% if values[event_type].games_played > 0 %}
+  <tbody>
+    <tr>
+      <th>{{ event_type|capitalize }}</th>
+      <td>{{ values[event_type].games_played }}</td>
+      <td>
+        {% set set_pc = 0 %}
+        {% if values[event_type].games_lost > 0 %}
+          {% set set_pc = values[event_type].games_won / values[event_type].games_lost * 100 %}
+        {% endif %}
+
+        {{ values[event_type].games_won }}/{{ values[event_type].games_lost }} @ {% if set_pc == 0 %}&#8734;{% else %}{{ '%0.2f' % set_pc }}%{% endif %}
+      </td>
+      <td>
+        {% set score_pc = 0 %}
+        {% if values[event_type].score_against > 0 %}
+          {% set score_pc = values[event_type].score_for / values[event_type].score_against * 100 %}
+        {% endif %}
+        {{ values[event_type].score_for }}/{{ values[event_type].score_against }} @ {% if score_pc == 0 %}&#8734;{% else %}{{ '%0.2f' % score_pc }}%{% endif %}
+      </td>
+      <td>
+         {% set ranking_url = url_for('munger',
+                                      event=event_type,
+                                      type=values.comp_type,
+                                      section=values.section,
+                                      competition=values.comp,
+                                      _anchor=values.name) -%}
+
+        <span class="pull-right">
+          <a href="{{ ranking_url }}">
+            <img alt="Rankings" src="{{ url_for('static', filename='images/ranking.png') }}" width="90%">
+          </a>
+        </span>
+      </td>
+    </tr>
+  </tbody>
+  {% endif %}
+  {% endif %}
   {% endfor %}
-</div>
+</table>
+{% endfor %}
+
 {% endblock content %}

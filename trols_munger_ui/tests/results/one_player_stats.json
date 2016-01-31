@@ -1,0 +1,27 @@
+{
+    "Isabella Markovski~Watsonia Blue~14~girls~saturday_am_autumn_2015": {
+        "comp": "saturday_am_autumn_2015",
+        "comp_type": "girls",
+        "comp_string": "Saturday AM Autumn 2015",
+        "doubles": {
+            "games_lost": 8,
+            "games_played": 22,
+            "games_won": 14,
+            "percentage": 152.7027027027027,
+            "score_against": 74,
+            "score_for": 113
+        },
+        "name": "Isabella Markovski",
+        "section": "14",
+        "singles": {
+            "games_lost": 0,
+            "games_played": 0,
+            "games_won": 0,
+            "percentage": 0,
+            "score_against": 0,
+            "score_for": 0
+        },
+        "team": "Watsonia Blue",
+        "token": "Isabella Markovski~Watsonia Blue~14~girls~saturday_am_autumn_2015"
+    }
+}

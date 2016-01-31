@@ -1,0 +1,24 @@
+{
+  "competition": null,
+  "players": [
+    {
+      "comp": "saturday_am_autumn_2015", 
+      "comp_string": "Saturday AM Autumn 2015", 
+      "comp_type": "boys", 
+      "name": "Joel Markovski", 
+      "section": "20", 
+      "team": "Watsonia", 
+      "token": "Joel Markovski~Watsonia~20~boys~saturday_am_autumn_2015"
+    },
+    {
+      "comp": "saturday_am_spring_2015", 
+      "comp_string": "Saturday AM Spring 2015", 
+      "comp_type": "boys", 
+      "name": "Joel Markovski", 
+      "section": "21", 
+      "team": "Watsonia", 
+      "token": "Joel Markovski~Watsonia~21~boys~saturday_am_spring_2015"
+    }
+  ],
+  "search_terms": "joel markovski"
+}

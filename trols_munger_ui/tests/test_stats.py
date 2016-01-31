@@ -1,6 +1,7 @@
 import unittest2
 import urllib
 import os
+import json
 
 import trols_munger_ui
 
@@ -9,6 +10,8 @@ class TestStats(unittest2.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        cls.maxDiff = None
+
         shelve_dir = os.path.join('trols_munger_ui', 'tests', 'files')
         trols_munger_ui.app.config['SHELVE'] = shelve_dir
         cls.__app = trols_munger_ui.app.test_client()
@@ -23,7 +26,9 @@ class TestStats(unittest2.TestCase):
         # Given a query token
         query_kwargs = {
             'token':
-                'Isabella Markovski|Watsonia Blue|14|girls|saturday_am_autumn_2015'
+                'Isabella Markovski~Watsonia Blue~14~girls~'
+                'saturday_am_autumn_2015',
+            'json': 'true',
         }
         query_string = urllib.urlencode(query_kwargs)
 
@@ -34,6 +39,14 @@ class TestStats(unittest2.TestCase):
         received = response.status_code
         expected = 200
         msg = 'Players check response code'
+        self.assertEqual(received, expected, msg)
+
+        # and I should get a JSON structure
+        received = json.loads(response.data)
+        with open(os.path.join(self.__results_dir,
+                               'one_player_stats.json')) as _fh:
+            expected = json.loads(_fh.read().rstrip())
+        msg = 'Player stats JSON response error'
         self.assertEqual(received, expected, msg)
 
     @classmethod
