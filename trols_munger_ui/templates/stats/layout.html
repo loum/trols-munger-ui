@@ -40,14 +40,14 @@
           {% set set_pc = values[event_type].games_won / values[event_type].games_lost * 100 %}
         {% endif %}
 
-        {{ values[event_type].games_won }}/{{ values[event_type].games_lost }} @ {% if set_pc == 0 %}&#8734;{% else %}{{ '%0.2f' % set_pc }}%{% endif %}
+        {{ values[event_type].games_won }}/{{ values[event_type].games_lost }} @ {% if values[event_type].games_lost == 0 %}&#8734;{% else %}{{ '%0.2f' % set_pc }}%{% endif %}
       </td>
       <td>
         {% set score_pc = 0 %}
         {% if values[event_type].score_against > 0 %}
           {% set score_pc = values[event_type].score_for / values[event_type].score_against * 100 %}
         {% endif %}
-        {{ values[event_type].score_for }}/{{ values[event_type].score_against }} @ {% if score_pc == 0 %}&#8734;{% else %}{{ '%0.2f' % score_pc }}%{% endif %}
+        {{ values[event_type].score_for }}/{{ values[event_type].score_against }} @ {% if values[event_type].score_against == 0 %}&#8734;{% else %}{{ '%0.2f' % score_pc }}%{% endif %}
       </td>
       <td>
          {% set ranking_url = url_for('munger',
