@@ -12,8 +12,6 @@ class TestPlayers(unittest2.TestCase):
     def setUpClass(cls):
         cls.maxDiff = None
 
-        shelve_dir = os.path.join('trols_munger_ui', 'tests', 'files')
-        trols_munger_ui.app.config['SHELVE'] = shelve_dir
         cls.__app = trols_munger_ui.app.test_client()
 
         cls.__results_dir = os.path.join('trols_munger_ui',
@@ -64,10 +62,11 @@ class TestPlayers(unittest2.TestCase):
             'q': 'Markovski',
             'json': 'true'
         }
-        query = urllib.urlencode(kwargs)
+        query_string = urllib.urlencode(kwargs)
 
         # when I send to the search URL
-        response = self.__app.get('/munger/players?{}'.format(query))
+        url = '/munger/players/nejta/2015/autumn'
+        response = self.__app.get('{}?{}'.format(url, query_string))
 
         # then I should get ...
         received = response.status_code
@@ -93,7 +92,8 @@ class TestPlayers(unittest2.TestCase):
         query_string = urllib.urlencode(query_kwargs)
 
         # when I send to the search URL
-        response = self.__app.get('/munger/players?{}'.format(query_string))
+        url = '/munger/players/nejta/2015/autumn'
+        response = self.__app.get('{}?{}'.format(url, query_string))
 
         # then I should get ...
         received = response.status_code

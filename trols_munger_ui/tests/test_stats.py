@@ -12,8 +12,6 @@ class TestStats(unittest2.TestCase):
     def setUpClass(cls):
         cls.maxDiff = None
 
-        shelve_dir = os.path.join('trols_munger_ui', 'tests', 'files')
-        trols_munger_ui.app.config['SHELVE'] = shelve_dir
         cls.__app = trols_munger_ui.app.test_client()
 
         cls.__results_dir = os.path.join('trols_munger_ui',
@@ -27,7 +25,7 @@ class TestStats(unittest2.TestCase):
         query_kwargs = {
             'token':
                 'Isabella Markovski~Watsonia Blue~14~girls~'
-                'saturday_am_autumn_2015',
+                'nejta_saturday_am_autumn_2015',
             'json': 'true',
         }
         query_string = urllib.urlencode(query_kwargs)

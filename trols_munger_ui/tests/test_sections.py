@@ -13,8 +13,6 @@ from filer.files import (remove_files,
 class TestSections(unittest2.TestCase):
     @classmethod
     def setUpClass(cls):
-        shelve_dir = os.path.join('trols_munger_ui', 'tests', 'files')
-        trols_munger_ui.app.config['SHELVE'] = shelve_dir
         cls.__app =  trols_munger_ui.app.test_client()
 
     def test_sections(self):
@@ -39,7 +37,7 @@ class TestSections(unittest2.TestCase):
         # When I source the default NETJA Saturday Spring 2015
         # girls sections
         query = {
-            'competition': 'saturday_am_spring_2015',
+            'competition': 'nejta_saturday_am_spring_2015',
             'type': 'girls'
         }
         query_params = urllib.urlencode(query)

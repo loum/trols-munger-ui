@@ -101,7 +101,7 @@ def players(league=None, year=None, season=None):
 
     competition = None
     if league == 'nejta':
-        competition = 'saturday_am_{}_{}'.format(season, year)
+        competition = 'nejta_saturday_am_{}_{}'.format(season, year)
 
     trols_munger_ui.app.logger.debug('competition: %s', competition)
 
