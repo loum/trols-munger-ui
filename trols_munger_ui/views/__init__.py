@@ -48,9 +48,13 @@ def munger():
         if section is not None:
             section = section[0]
 
-        comp_type = terms.get('type')
+        comp_type = orig_comp_type = terms.get('type')
         if comp_type is not None:
-            comp_type = comp_type[0]
+            if comp_type[0] == 'mens':
+                orig_comp_type = 'mens'
+                comp_type = None
+            else:
+                comp_type = orig_comp_type = comp_type[0]
 
         event = terms.get('event')
         if event is not None:
@@ -80,7 +84,7 @@ def munger():
                                              limit=None)
 
         stats['competition'] = competition
-        stats['comp_type'] = comp_type
+        stats['comp_type'] = orig_comp_type
         stats['event'] = event
         stats['section'] = section
         stats['team'] = team
@@ -199,7 +203,10 @@ def _teams():
 
     comp_type = terms.get('type')
     if comp_type is not None:
-        comp_type = comp_type[0]
+        if comp_type[0] == 'mens':
+            comp_type = None
+        else:
+            comp_type = comp_type[0]
 
     section = terms.get('section')
     if section is not None:
@@ -228,7 +235,10 @@ def _sections():
 
     comp_type = terms.get('type')
     if comp_type is not None:
-        comp_type = comp_type[0]
+        if comp_type[0] == 'mens':
+            comp_type = None
+        else:
+            comp_type = comp_type[0]
 
     db = trols_munger_ui.get_db()
     reporter = trols_stats.interface.Reporter(db=db)
@@ -240,3 +250,22 @@ def _sections():
     sections = reporter.get_sections(**kwargs)
 
     return flask.jsonify({'sections': sections})
+
+
+@trols_munger_ui.app.route('/_compdetails')
+def _compdetails():
+    terms = query_terms_to_dict(flask.request.url)
+
+    competition = terms.get('competition')
+    if competition is not None:
+        competition = competition[0]
+
+    db = trols_munger_ui.get_db()
+    reporter = trols_stats.interface.Reporter(db=db)
+
+    kwargs = {
+        'competition': competition,
+    }
+    details = reporter.get_competition_details(**kwargs)
+
+    return flask.jsonify(details)

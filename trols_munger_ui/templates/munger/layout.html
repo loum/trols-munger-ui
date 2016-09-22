@@ -12,7 +12,6 @@
     <script src="/static/assets/js/utils.js"></script>
 
     <script type="text/javascript">
-    // Update teams when section changes.
     //<![CDATA[
     $(window).load(function() {
         $(document).ready(function() {
@@ -28,6 +27,92 @@
     </script>
 
     <script type="text/javascript">
+    //<![CDATA[
+    $(document).ready(function() {
+        var competition = $('select[name=competition]').val()
+        $('select[name=event] option[value!=""]').remove()
+        $('select[name=type] option[value!=""]').remove()
+        $('select[name=section] option[value!=""]').remove()
+        $('select[name=team] option[value!=""]').remove()
+        $.getJSON($SCRIPT_ROOT + '/_compdetails?competition=' + competition, function(data) {
+            $.each(data, function(key, value) {
+                if (key === "event") {
+                    $.each(value, function(idx, event) {
+                        $('<option>').val(event).text(event).appendTo('select[name=event]');
+                    });
+                } else if (key === "event_type") {
+                    $.each(value, function(idx, type) {
+                        $('<option>').val(type).text(type).appendTo('select[name=type]');
+                    });
+                }
+            });
+        });
+    });
+    //]]>
+    </script>
+
+    <script type="text/javascript">
+    //<![CDATA[
+    $(window).load(function() {
+        $(document).ready(function() {
+            $('select[name=competition]').on('change', function() {
+                var competition = $('select[name=competition]').val()
+                $('select[name=event] option[value!=""]').remove()
+                $('select[name=type] option[value!=""]').remove()
+                $('select[name=section] option[value!=""]').remove()
+                $('select[name=team] option[value!=""]').remove()
+                $.getJSON($SCRIPT_ROOT + '/_compdetails?competition=' + competition, function(data) {
+                    $.each(data, function(key, value) {
+                        if (key === "event") {
+                            $.each(value, function(idx, event) {
+                                $('<option>').val(event).text(event).appendTo('select[name=event]');
+                            });
+                        } else if (key === "event_type") {
+                            $.each(value, function(idx, type) {
+                                $('<option>').val(type).text(type).appendTo('select[name=type]');
+                            });
+                        }
+                    });
+                });
+            });
+        });
+    });
+    //]]>
+    </script>
+
+    <!-- <script type="text/javascript">
+    // Update teams on first load.
+    //<![CDATA[
+    $(document).ready(function() {
+        var competition = $('select[name=competition]').val()
+        var section = $('select[name=section]').val()
+        if (section === null) {
+            section = ''
+        }
+        var comp_type = $('select[name=type]').val()
+        if (comp_type === null) {
+            comp_type = ''
+        }
+        $('select[name=team] option[value!=""]').remove()
+
+        $.getJSON($SCRIPT_ROOT + '/_teams?competition=' + competition + '&type=' + comp_type + '&section=' + section, function(data) {
+            var selected_team = getUrlParameter('team');
+            $.each(data, function(key, value) {
+                $.each(value, function(idx, team) {
+                    if (typeof selected_team !== "undefined" && selected_team.replace(/\+/g, ' ') === team) {
+                        $('<option>').val(team).text(team).attr('selected', 'selected').appendTo('select[name=team]');
+                    }
+                    else {
+                        $('<option>').val(team).text(team).appendTo('select[name=team]');
+                    }
+                });
+            });
+        });
+    });
+    //]]>
+    </script> -->
+
+    <script type="text/javascript">
     // Update teams when section changes.
     //<![CDATA[
     $(window).load(function() {
@@ -36,7 +121,7 @@
                 var competition = $('select[name=competition]').val()
                 var section = $('select[name=section]').val()
                 var comp_type = $('select[name=type]').val()
-                if (comp_type == null) {
+                if (comp_type === null) {
                     comp_type = ''
                 }
 
@@ -55,46 +140,18 @@
     </script>
 
     <script type="text/javascript">
-    // Update teams on first load.
-    //<![CDATA[
-    $(document).ready(function() {
-        var competition = $('select[name=competition]').val()
-        var section = $('select[name=section]').val()
-        if (section == null) {
-            section = ''
-        }
-        var comp_type = $('select[name=type]').val()
-        if (comp_type == null) {
-            comp_type = ''
-        }
-        $('select[name=team] option[value!=""]').remove()
-
-        $.getJSON($SCRIPT_ROOT + '/_teams?competition=' + competition + '&type=' + comp_type + '&section=' + section, function(data) {
-            var selected_team = getUrlParameter('team');
-            $.each(data, function(key, value) {
-                $.each(value, function(idx, team) {
-                    if (typeof selected_team !== "undefined" && selected_team.replace(/\+/g, ' ') == team) {
-                        $('<option>').val(team).text(team).attr('selected', 'selected').appendTo('select[name=team]');
-                    }
-                    else {
-                        $('<option>').val(team).text(team).appendTo('select[name=team]');
-                    }
-                });
-            });
-        });
-    });
-    //]]>
-    </script>
-
-    <script type="text/javascript">
+    // Dynamically update section and team when event type changes.
     //<![CDATA[
     $(window).load(function() {
         $(document).ready(function() {
             $('select[name=type]').on('change', function() {
                 var competition = $('select[name=competition]').val()
                 var comp_type = $('select[name=type]').val()
+                if (comp_type === "mens") {
+                    comp_type = ''
+                }
                 var section = $('select[name=section]').val()
-                if (section == null) {
+                if (section === null) {
                     section = ''
                 }
                 $('select[name=section] option[value!=""]').remove()
@@ -132,41 +189,34 @@
           <div class="form-group">
             <!-- Competition -->
             <select class="form-control" name="competition">
+              <option value=""{% if not result.competition %} selected disabled {% endif %}>Competition</option>
               <option value="nejta_saturday_am_spring_2016" {% if result.competition == "nejta_saturday_am_spring_2016"%}selected{% endif %}>NEJTA Saturday AM Spring 2016</option>
+              <option value="dvta_tuesday_night_spring_2016" {% if result.competition == "dvta_tuesday_night_spring_2016"%}selected{% endif %}>DVTA Tuesday Night Spring 2016</option>
             </select>
           </div>
 
           <div class="form-group">
             <select class="form-control" name="event">
-              <option value=""{% if not result.event %} selected disabled {% endif %}>Event</option>
-              <option value="singles" {% if result.event == "singles" %}selected{% endif %}>singles</option>
-              <option value="doubles" {% if result.event == "doubles" %}selected{% endif %}>doubles</option>
+              <option value="">Event</option>
             </select>
           </div>
 
           <div class="form-group">
             <select class="form-control" name="type">
-              <option value=""{% if not result.comp_type %} selected disabled{% endif %}>Event type</option>
-              <option value="boys" {% if result.comp_type == "boys" %}selected{% endif %}>boys</option>
-              <option value="girls" {% if result.comp_type == "girls" %}selected{% endif %}>girls</option>
+              <option value="">Event type</option>
             </select>
           </div>
 
           <div class="form-group">
             <select class="form-control" name="section">
-              <option value=""{% if not result.section %} selected disabled{% endif %}>Section</option>
-              {% for section_no in range(1, 27) %}
-              <option value="{{ section_no }}" {% if result.section == section_no|string %}selected{% endif %}>{{ section_no }}</option>
-              {%- endfor %}
+              <option value="">Section</option>
             </select>
           </div>
 
           <div class="form-group">
             <select class="form-control" name="team">
-              <option value=""{% if not result.team %} selected disabled{% endif %}>Team</option>
-              {% if result.team %}
-              <option value="{{ result.team }}" selected>{{ result.team }}</option>
-              {% endif %}
+              <option value="">Team</option>
+              <!-- <option value="{{ result.team }}" selected>{{ result.team }}</option> -->
             </select>
           </div>
 
