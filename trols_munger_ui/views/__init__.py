@@ -1,12 +1,12 @@
 """TROLS Munger UI views abstraction.
+
 """
-import flask
-import urlparse
 import os
+import flask
 
 import trols_munger_ui
-import trols_stats.interface
 from trols_munger_ui.utils import query_terms_to_dict
+import trols_stats.interface
 from filer.files import get_file_time_in_utc
 
 
@@ -33,12 +33,12 @@ def google():
 def munger():
     """Munger.
     """
-    db = trols_munger_ui.get_db()
-    reporter = trols_stats.interface.Reporter(db=db)
+    _db = trols_munger_ui.get_db()
+    reporter = trols_stats.interface.Reporter(db=_db)
 
     terms = query_terms_to_dict(flask.request.url)
 
-    stats = {}
+    _stats = {}
     if terms.keys():
         competition = terms.get('competition')
         if competition is not None:
@@ -82,18 +82,22 @@ def munger():
                                              key='percentage',
                                              reverse=True,
                                              limit=None)
+        ranked_stats = reporter.rank_stats(filtered_stats,
+                                           event=event,
+                                           key='percentage')
 
-        stats['competition'] = competition
-        stats['comp_type'] = orig_comp_type
-        stats['event'] = event
-        stats['section'] = section
-        stats['team'] = team
-        stats['players'] = filtered_stats
+        _stats['competition'] = competition
+        _stats['comp_type'] = orig_comp_type
+        _stats['event'] = event
+        _stats['section'] = section
+        _stats['team'] = team
+        _stats['players'] = ranked_stats
 
     if terms.get('json') is not None and terms.get('json')[0] == 'true':
-        response = flask.json.jsonify(stats)
+        response = flask.json.jsonify(_stats)
     else:
-        response = flask.render_template('munger/layout.html', result=stats)
+        response = flask.render_template('munger/layout.html',
+                                         result=_stats)
 
     return response
 
@@ -109,8 +113,8 @@ def players(league=None, year=None, season=None):
 
     trols_munger_ui.app.logger.debug('competition: %s', competition)
 
-    db = trols_munger_ui.get_db()
-    reporter = trols_stats.interface.Reporter(db=db)
+    _db = trols_munger_ui.get_db()
+    reporter = trols_stats.interface.Reporter(db=_db)
 
     players = []
     search_terms = str()
@@ -142,16 +146,16 @@ def players(league=None, year=None, season=None):
 def stats():
     terms = query_terms_to_dict(flask.request.url)
 
-    db = trols_munger_ui.get_db()
-    reporter = trols_stats.interface.Reporter(db=db)
+    _db = trols_munger_ui.get_db()
+    reporter = trols_stats.interface.Reporter(db=_db)
 
-    stats = reporter.get_player_stats(terms.get('token'))
+    _stats = reporter.get_player_stats(terms.get('token'))
 
     if terms.get('json') is not None and terms.get('json')[0] == 'true':
-        response = flask.json.jsonify(stats)
+        response = flask.json.jsonify(_stats)
     else:
         response = flask.render_template('stats/layout.html',
-                                         result=stats)
+                                         result=_stats)
 
     return response
 
@@ -160,8 +164,8 @@ def stats():
 def results():
     terms = query_terms_to_dict(flask.request.url)
 
-    db = trols_munger_ui.get_db()
-    reporter = trols_stats.interface.Reporter(db=db)
+    _db = trols_munger_ui.get_db()
+    reporter = trols_stats.interface.Reporter(db=_db)
 
     match_results = {}
     if terms.get('token') is not None:
@@ -212,8 +216,8 @@ def _teams():
     if section is not None:
         section = section[0]
 
-    db = trols_munger_ui.get_db()
-    reporter = trols_stats.interface.Reporter(db=db)
+    _db = trols_munger_ui.get_db()
+    reporter = trols_stats.interface.Reporter(db=_db)
 
     kwargs = {
         'competition': competition,
@@ -240,8 +244,8 @@ def _sections():
         else:
             comp_type = comp_type[0]
 
-    db = trols_munger_ui.get_db()
-    reporter = trols_stats.interface.Reporter(db=db)
+    _db = trols_munger_ui.get_db()
+    reporter = trols_stats.interface.Reporter(db=_db)
 
     kwargs = {
         'competition': competition,
@@ -260,8 +264,8 @@ def _compdetails():
     if competition is not None:
         competition = competition[0]
 
-    db = trols_munger_ui.get_db()
-    reporter = trols_stats.interface.Reporter(db=db)
+    _db = trols_munger_ui.get_db()
+    reporter = trols_stats.interface.Reporter(db=_db)
 
     kwargs = {
         'competition': competition,

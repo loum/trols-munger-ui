@@ -1,11 +1,11 @@
-"""GeoLib web interface.
+"""TROLS Munger web interface.
 
 """
 import os
 import flask
+from logga import log
 
 import trols_stats
-from logga.log import log
 
 
 app = flask.Flask(__name__)
@@ -15,15 +15,16 @@ else:
     app.config.from_object('trols_munger_ui.config')
 import trols_munger_ui.views
 
-db = None
+MODEL = None
 if app.config.get('SHELVE') is not None:
     log.info('SHELVE: %s', app.config.get('SHELVE'))
-    session = trols_stats.DBSession(shelve=app.config.get('SHELVE'))
-    session.connect()
+    # session = trols_stats.DBSession(shelve=app.config.get('SHELVE'))
+    # session.connect()
     log.info('Reading TROLS stats in memory ...')
-    db = session.connection['trols']
+    # db = session.connection['trols']
+    MODEL = trols_stats.DataModel(shelve=app.config.get('SHELVE'))
     log.info('TROLS stats read OK.')
-    session.close()
+    # session.close()
 
 
 def get_db():
@@ -32,5 +33,6 @@ def get_db():
     """
     top = flask._app_ctx_stack.top
     if not hasattr(top, 'shelve'):
-        top.shelve = db
+        top.shelve = MODEL
+
     return top.shelve

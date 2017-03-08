@@ -1,11 +1,11 @@
-import unittest2
+import unittest
 import os
 import urllib
 
 import trols_munger_ui
 
 
-class TestMunger(unittest2.TestCase):
+class TestMunger(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         shelve_dir = os.path.join('trols_munger_ui', 'tests', 'files')
@@ -20,13 +20,13 @@ class TestMunger(unittest2.TestCase):
             'event': 'singles',
             'team': 'Watsonia',
         }
-        query_string = urllib.urlencode(query_kwargs)
+        query_string = urllib.parse.urlencode(query_kwargs)
 
         # when I source the default NETJA Saturday Spring 2015 stats
         response = self.__app.get('/munger?{}'.format(query_string))
 
         # then I should get a 200 response
-        msg = 'Doubles club based stats response code error'
+        msg = 'Singles club based stats response code error'
         self.assertEqual(response.status_code, 200, msg)
 
     def test_munger_doubles_club_stats(self):
@@ -37,7 +37,7 @@ class TestMunger(unittest2.TestCase):
             'event': 'doubles',
             'team': 'Watsonia',
         }
-        query_string = urllib.urlencode(query_kwargs)
+        query_string = urllib.parse.urlencode(query_kwargs)
 
         # when I source the default NETJA Saturday Spring 2015 stats
         response = self.__app.get('/munger?{}'.format(query_string))

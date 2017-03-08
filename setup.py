@@ -1,73 +1,43 @@
-""":mod:docutils` setup.py file to generate Python compatible sources in
-build/ directory
+"""Setup script for the TROLS Stats project.
 """
-import os
-import glob
-import fnmatch
-import shutil
-from setuptools import setup
-
-VERSION = '0.1.1'
+import setuptools
 
 
-def opj(*args):
-    path = os.path.join(*args)
-    return os.path.normpath(path)
+PACKAGES = [
+    'configa==1.0.0',
+    'filer==1.0.0',
+    'flask==0.12',
+    'logga==1.0.0',
+    'pylint==1.6.4',
+    'pytest==2.9.2',
+    'pytest-cov==2.3.0',
+    'sphinx_rtd_theme==0.1.10a0',
+    'twine',
+    'trols-stats==1.0.0',
+    'Sphinx==1.4.5',
+]
 
+SETUP_KWARGS = {
+    'name': 'trols-munger-ui',
+    'version': '1.0.0',
+    'description': 'TROLS Munger UI',
+    'author': 'Lou Markovski',
+    'author_email': 'lou.markovski@gmail.com',
+    'url': 'https://github.com/loum/trols-munger-ui',
+    'install_requires': PACKAGES,
+    'packages': setuptools.find_packages(),
+    'package_data': {
+        'trols_munger_ui': [
+        ],
+    },
+    'license': 'MIT',
+    'classifiers': [
+        'Development Status :: 5 - Production/Stable',
+        'Intended Audience :: Developers',
+        'Topic :: Software Development :: Build Tools',
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python :: 3',
+    ],
+}
 
-def find_data_files(srcdir, *wildcards, **kw):
-    """Get a list of all files under the *srcdir* matching *wildcards*,
-    returned in a format to be used for install_data.
-
-    """
-    def walk_helper(arg, dirname, files):
-        names = []
-        lst, wildcards = arg
-        for wildcard in wildcards:
-            wc_name = opj(dirname, wildcard)
-            for current_file in files:
-                filename = opj(dirname, current_file)
-
-                if (fnmatch.fnmatch(filename, wc_name) and
-                        not os.path.isdir(filename)):
-                    if kw.get('version') is None:
-                        names.append(filename)
-                    else:
-                        versioned_file = '%s.%s' % (filename,
-                                                    kw.get('version'))
-                        shutil.copyfile(filename, versioned_file)
-                        names.append('%s.%s' % (filename,
-                                                kw.get('version')))
-
-        if names:
-            if kw.get('target_dir') is None:
-                lst.append(('', names))
-            else:
-                lst.append((kw.get('target_dir'), names))
-
-    file_list = []
-    recursive = kw.get('recursive', True)
-    if recursive:
-        os.path.walk(srcdir, walk_helper, (file_list, wildcards))
-    else:
-        walk_helper((file_list, wildcards),
-                    srcdir,
-                    [os.path.basename(current_file) for current_file in glob.glob(opj(srcdir, '*'))])
-
-    return file_list
-
-# find_data_files('trols_munger_ui/conf/',
-#                 '*.conf',
-#                 version=VERSION)
-
-# find_data_files('trols_munger_ui/templates/')
-
-setup(name='python-trols-munger-ui',
-      version=VERSION,
-      description='TROLS-Munger-UI',
-      author='Lou Markovski',
-      author_email='lou.markovski@gmail.com',
-      url='',
-      packages=['trols_munger_ui',
-                'trols_munger_ui.views'],
-      include_package_data=True)
+setuptools.setup(**SETUP_KWARGS)

@@ -99,12 +99,12 @@ Round: {{ result['match_round'] }}
 {% extends "layout.html" %}
 {% block content %}
 
-{% for player_token, values in result.iteritems() %}
+{% for player_token, values in result.items() %}
   <h3>{{ search_link(values['name']) }}</h3>
   <h4>
     {{ values['team'] }} Section {{ values['section'] }} {{ values['comp_string'] }}
   </h4>
-  {% for round_no, rounds in values.get('rounds').iteritems() %}
+  {% for round_no, rounds in values.get('rounds').items() %}
   <table class="table table-condensed">
     <thead>
       <tr>

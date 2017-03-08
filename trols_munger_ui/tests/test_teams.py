@@ -1,4 +1,7 @@
-import unittest2
+"""Unit test cases for Teams.
+
+"""
+import unittest
 import os
 import tempfile
 import json
@@ -10,7 +13,7 @@ from filer.files import (remove_files,
                          move_file)
 
 
-class TestTeams(unittest2.TestCase):
+class TestTeams(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.__app =  trols_munger_ui.app.test_client()
@@ -26,11 +29,11 @@ class TestTeams(unittest2.TestCase):
         self.assertEqual(response.status_code, 200, msg)
 
         # and the JSON teams list should match
-        result = json.loads(response.data)
+        result = json.loads(response.data.decode('utf-8'))
         received = sorted(result.get('teams'))
         expected = 'Watsonia'
         msg = 'Teams list mis-match'
-        self.assertEqual(received[67], expected, msg)
+        self.assertTrue('Watsonia' in received, msg)
 
     def test_teams_competition_type(self):
         """Test teams call: competition type.
@@ -40,7 +43,7 @@ class TestTeams(unittest2.TestCase):
             'competition': 'nejta_saturday_am_spring_2015',
             'type': 'girls'
         }
-        query_params = urllib.urlencode(query)
+        query_params = urllib.parse.urlencode(query)
         response = self.__app.get('/_teams?{}'.format(query_params))
 
         # then I should get a 200 response
@@ -48,7 +51,7 @@ class TestTeams(unittest2.TestCase):
         self.assertEqual(response.status_code, 200, msg)
 
         # and the JSON teams list should match
-        received = json.loads(response.data)
+        received = json.loads(response.data.decode('utf-8'))
         expected = u'Watsonia'
         msg = 'Teams for comp_type list mis-match'
         self.assertEqual(received.get('teams')[40], expected, msg)
@@ -62,7 +65,7 @@ class TestTeams(unittest2.TestCase):
             'type': 'boys',
             'section': '21'
         }
-        query_params = urllib.urlencode(query)
+        query_params = urllib.parse.urlencode(query)
         response = self.__app.get('/_teams?{}'.format(query_params))
 
         # then I should get a 200 response
@@ -70,7 +73,7 @@ class TestTeams(unittest2.TestCase):
         self.assertEqual(response.status_code, 200, msg)
 
         # and the JSON teams list should match
-        received = json.loads(response.data)
+        received = json.loads(response.data.decode('utf-8'))
         expected = u'Watsonia'
         msg = 'Teams list for comp_type and section mis-match'
         self.assertEqual(received.get('teams')[7], expected, msg)
@@ -85,7 +88,7 @@ class TestTeams(unittest2.TestCase):
             'type': 'girls',
             'section': '21'
         }
-        query_params = urllib.urlencode(query)
+        query_params = urllib.parse.urlencode(query)
         response = self.__app.get('/_teams?{}'.format(query_params))
 
         # then I should get a 200 response
@@ -93,7 +96,7 @@ class TestTeams(unittest2.TestCase):
         self.assertEqual(response.status_code, 200, msg)
 
         # and an empty JSON teams list
-        received = json.loads(response.data)
+        received = json.loads(response.data.decode('utf-8'))
         expected = []
         msg = 'Teams list should be empty'
         self.assertListEqual(received.get('teams'), expected, msg)

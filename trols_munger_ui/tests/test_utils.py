@@ -1,10 +1,10 @@
-import unittest2
+import unittest
 import urllib
 
 from trols_munger_ui.utils import query_terms_to_dict
 
 
-class TestUtils(unittest2.TestCase):
+class TestUtils(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -14,7 +14,7 @@ class TestUtils(unittest2.TestCase):
         """Parse query term strings: single term.
         """
         terms = {'q': 'isabella'}
-        request = '{}?{}'.format(self.__base_url, urllib.urlencode(terms))
+        request = '{}?{}'.format(self.__base_url, urllib.parse.urlencode(terms))
 
         received = query_terms_to_dict(request)
         expected = {'q': ['isabella']}
@@ -26,7 +26,7 @@ class TestUtils(unittest2.TestCase):
         """
         terms = {'q': ['joel', 'eboni']}
         request = '{}?{}'.format(self.__base_url,
-                                 urllib.urlencode(terms, doseq=True))
+                                 urllib.parse.urlencode(terms, doseq=True))
 
         received = query_terms_to_dict(request)
         expected = {'q': ['joel', 'eboni']}
@@ -38,7 +38,7 @@ class TestUtils(unittest2.TestCase):
         """
         terms = {'q': ['joel', 'Isabella Markovski']}
         request = '{}?{}'.format(self.__base_url,
-                                 urllib.urlencode(terms, doseq=True))
+                                 urllib.parse.urlencode(terms, doseq=True))
 
         received = query_terms_to_dict(request)
         expected = {'q': ['joel', 'Isabella Markovski']}
@@ -49,7 +49,7 @@ class TestUtils(unittest2.TestCase):
         """Parse query term strings: single term with preamble.
         """
         terms = {'q': 'Isabella'}
-        request = '{}?{}'.format(self.__base_url, urllib.urlencode(terms))
+        request = '{}?{}'.format(self.__base_url, urllib.parse.urlencode(terms))
 
         received = query_terms_to_dict(request, key_preamble='metadata=')
         expected = {'metadata=q': ['Isabella']}

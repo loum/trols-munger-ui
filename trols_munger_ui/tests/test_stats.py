@@ -1,4 +1,7 @@
-import unittest2
+"""Unit tests for the Stats view.
+
+"""
+import unittest
 import urllib
 import os
 import json
@@ -6,7 +9,7 @@ import json
 import trols_munger_ui
 
 
-class TestStats(unittest2.TestCase):
+class TestStats(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -28,7 +31,7 @@ class TestStats(unittest2.TestCase):
                 'nejta_saturday_am_autumn_2015',
             'json': 'true',
         }
-        query_string = urllib.urlencode(query_kwargs)
+        query_string = urllib.parse.urlencode(query_kwargs)
 
         # when I send to the players URL
         response = self.__app.get('/munger/stats?{}'.format(query_string))
@@ -40,7 +43,7 @@ class TestStats(unittest2.TestCase):
         self.assertEqual(received, expected, msg)
 
         # and I should get a JSON structure
-        received = json.loads(response.data)
+        received = json.loads(response.data.decode('utf-8'))
         with open(os.path.join(self.__results_dir,
                                'one_player_stats.json')) as _fh:
             expected = json.loads(_fh.read().rstrip())

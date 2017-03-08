@@ -7,7 +7,7 @@
 {% extends "layout.html" %}
 {% block content %}
 
-{% for token, values in result.iteritems() %}
+{% for token, values in result.items() %}
 <h3>{{ search_link(values.name) }}</h3>
 <h4>{{ values.team }} Section {{ values.section }} {{ values.comp_string }}</h4>
 <table class="table table-condensed">

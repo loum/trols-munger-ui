@@ -1,9 +1,9 @@
-import unittest2
+import unittest
 
 import trols_munger_ui
 
 
-class TestGoogle(unittest2.TestCase):
+class TestGoogle(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.__app =  trols_munger_ui.app.test_client()

@@ -1,9 +1,9 @@
-import unittest2
+import unittest
 
 import trols_munger_ui
 
 
-class TestHealth(unittest2.TestCase):
+class TestHealth(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         trols_munger_ui.app.config['SHELVE'] = '/var/tmp/trols_shelve'

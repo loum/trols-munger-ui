@@ -1,7 +1,8 @@
-import urlparse
-import urllib
+"""General utils.
 
-from logga.log import log
+"""
+import urllib.parse
+from logga import log
 
 
 def query_terms_to_dict(request, key_preamble=None):
@@ -24,22 +25,22 @@ def query_terms_to_dict(request, key_preamble=None):
              {'metadata=NITF_IREP': ['MONO']}
 
     **Returns:**
-        dictionary structure as per :func:`urlparse.parse_qs` where the
+        dictionary structure as per :func:`urllib.parse.parse_qs` where the
         keys are unique query variable names and the values are lists of
         values for each name
 
     """
     log.debug('Parsing query terms request: %s', request)
 
-    log.debug('Unquoted: %s', urllib.unquote(request))
+    log.debug('Unquoted: %s', urllib.parse.unquote(request))
 
-    parser = urlparse.urlparse(request)
-    query_strings = urlparse.parse_qs(parser.query)
+    parser = urllib.parse.urlparse(request)
+    query_strings = urllib.parse.parse_qs(parser.query)
 
     if key_preamble is not None:
         tmp_query_strings = dict(query_strings)
         query_strings.clear()
-        for key, value in tmp_query_strings.iteritems():
+        for key, value in tmp_query_strings.items():
             query_strings['%s%s' % (key_preamble, key)] = value
 
     log.debug('Parsed query strings: %s', query_strings)

@@ -190,8 +190,8 @@
             <!-- Competition -->
             <select class="form-control" name="competition">
               <option value=""{% if not result.competition %} selected disabled {% endif %}>Competition</option>
-              <option value="nejta_saturday_am_spring_2016" {% if result.competition == "nejta_saturday_am_spring_2016"%}selected{% endif %}>NEJTA Saturday AM Spring 2016</option>
-              <option value="dvta_tuesday_night_spring_2016" {% if result.competition == "dvta_tuesday_night_spring_2016"%}selected{% endif %}>DVTA Tuesday Night Spring 2016</option>
+              <option value="nejta_saturday_am_autumn_2017" {% if result.competition == "nejta_saturday_am__2017"%}selected{% endif %}>NEJTA Saturday AM Autumn 2017</option>
+              <option value="dvta_thursday_night_autumn_2017" {% if result.competition == "dvta_thursday_night_autumn_2017"%}selected{% endif %}>DVTA Thursday Night Autumn 2017</option>
             </select>
           </div>
 
@@ -250,13 +250,12 @@
         </thead>
 
         <tbody>
-          {% set position = 1 %}
           {% for player in result.players %}
           {% if player[1][result.event]['games_played'] > 0 %}
           <tr>
             <!-- Rank -->
             <td> 
-              <b>{{ position }}</b>
+              <b>{{ player[1]['rank'] }}</b>
             </td>
 
             <!-- Player -->
@@ -317,7 +316,6 @@
               </a>
             </td>
           </tr>
-          {% set position = position + 1 %}
           {% endif %}
           {% endfor %}
         </tbody>

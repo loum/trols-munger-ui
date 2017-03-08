@@ -1,4 +1,7 @@
-import unittest2
+"""Unit tests for Section view.
+
+"""
+import unittest
 import os
 import tempfile
 import json
@@ -10,7 +13,7 @@ from filer.files import (remove_files,
                          move_file)
 
 
-class TestSections(unittest2.TestCase):
+class TestSections(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.__app =  trols_munger_ui.app.test_client()
@@ -26,8 +29,8 @@ class TestSections(unittest2.TestCase):
         self.assertEqual(response.status_code, 200, msg)
 
         # and the JSON teams list should match
-        received = json.loads(response.data)
-        expected = range(1, 27)
+        received = json.loads(response.data.decode('utf-8'))
+        expected = list(range(1, 27))
         msg = 'Sections list mis-match'
         self.assertEqual(received.get('sections'), expected, msg)
 
@@ -40,7 +43,7 @@ class TestSections(unittest2.TestCase):
             'competition': 'nejta_saturday_am_spring_2015',
             'type': 'girls'
         }
-        query_params = urllib.urlencode(query)
+        query_params = urllib.parse.urlencode(query)
         response = self.__app.get('/_sections?{}'.format(query_params))
 
         # then I should get a 200 response
@@ -48,7 +51,7 @@ class TestSections(unittest2.TestCase):
         self.assertEqual(response.status_code, 200, msg)
 
         # and the JSON sections list should match
-        received = json.loads(response.data)
-        expected = range(1, 15)
+        received = json.loads(response.data.decode('utf-8'))
+        expected = list(range(1, 15))
         msg = 'Sections for comp_type "girls" list mis-match'
         self.assertEqual(received.get('sections'), expected, msg)

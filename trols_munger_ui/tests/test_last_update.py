@@ -1,4 +1,4 @@
-import unittest2
+import unittest
 import os
 import tempfile
 
@@ -8,7 +8,7 @@ from filer.files import (remove_files,
                          move_file)
 
 
-class TestLastUpdate(unittest2.TestCase):
+class TestLastUpdate(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.__shelve_dir = tempfile.mkdtemp()
