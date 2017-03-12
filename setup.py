@@ -13,13 +13,13 @@ PACKAGES = [
     'pytest-cov==2.3.0',
     'sphinx_rtd_theme==0.1.10a0',
     'twine',
-    'trols-stats==1.0.0',
+    'trols-stats==1.0.1',
     'Sphinx==1.4.5',
 ]
 
 SETUP_KWARGS = {
     'name': 'trols-munger-ui',
-    'version': '1.0.0',
+    'version': '1.0.1',
     'description': 'TROLS Munger UI',
     'author': 'Lou Markovski',
     'author_email': 'lou.markovski@gmail.com',

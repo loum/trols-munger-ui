@@ -53,6 +53,12 @@ def munger():
             if comp_type[0] == 'mens':
                 orig_comp_type = 'mens'
                 comp_type = None
+            elif comp_type[0] == 'womens':
+                orig_comp_type = 'womens'
+                comp_type = None
+            elif comp_type[0] == 'mixed':
+                orig_comp_type = 'mixed'
+                comp_type = None
             else:
                 comp_type = orig_comp_type = comp_type[0]
 
@@ -207,7 +213,9 @@ def _teams():
 
     comp_type = terms.get('type')
     if comp_type is not None:
-        if comp_type[0] == 'mens':
+        if 'mens' in comp_type[0]:
+            comp_type = None
+        elif comp_type[0] == 'mixed':
             comp_type = None
         else:
             comp_type = comp_type[0]
@@ -239,7 +247,9 @@ def _sections():
 
     comp_type = terms.get('type')
     if comp_type is not None:
-        if comp_type[0] == 'mens':
+        if 'mens' in comp_type[0]:
+            comp_type = None
+        elif comp_type[0] == 'mixed':
             comp_type = None
         else:
             comp_type = comp_type[0]

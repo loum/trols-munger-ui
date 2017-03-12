@@ -192,6 +192,8 @@
               <option value=""{% if not result.competition %} selected disabled {% endif %}>Competition</option>
               <option value="nejta_saturday_am_autumn_2017" {% if result.competition == "nejta_saturday_am__2017"%}selected{% endif %}>NEJTA Saturday AM Autumn 2017</option>
               <option value="dvta_thursday_night_autumn_2017" {% if result.competition == "dvta_thursday_night_autumn_2017"%}selected{% endif %}>DVTA Thursday Night Autumn 2017</option>
+              <option value="dvta_thursday_am_autumn_2017" {% if result.competition == "dvta_thursday_am_autumn_2017"%}selected{% endif %}>DVTA Thursday AM Autumn 2017</option>
+              <option value="dvta_friday_night_autumn_2017" {% if result.competition == "dvta_friday_night_autumn_2017"%}selected{% endif %}>DVTA Friday Night Autumn 2017</option>
             </select>
           </div>
 
@@ -290,13 +292,13 @@
                 {% set last_played = "R" ~ last_played %}
               {% endif %}
               {% for fixture in player[1].last_fixture %}
-              {% if fixture.score_against == 6 %}
+              {% if fixture.player_won is not none and not fixture.player_won%}
               <span style="color:red">
+              {% else %}
+              <span>
               {% endif %}
                 {{ fixture.score_for }}-{{ fixture.score_against }}
-              {% if fixture.score_against == 6 %}
               </span>
-              {% endif %}
               {% endfor %}
 
               {% set home_team = player[1].last_fixture[0].fixture.home_team %}

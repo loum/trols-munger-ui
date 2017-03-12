@@ -30,7 +30,7 @@ Round: {{ result['match_round'] }}
 {% macro dump_singles(result) -%}
 {% if result.player_won == True %}
 <tr class="success">
-{% elif result.score_against == 6 %}
+{% elif result.player_won == False %}
 <tr class="danger">
 {% endif %}
   <td>
@@ -60,7 +60,7 @@ Round: {{ result['match_round'] }}
 {% macro dump_doubles(result) -%}
 {% if result.player_won == True %}
 <tr class="success">
-{% elif result.score_against == 6 %}
+{% elif result.score_against >= 6 %}
 <tr class="danger">
 {% endif %}
   <td class="col-xs-9">
