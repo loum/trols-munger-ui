@@ -13,7 +13,7 @@ PACKAGES = [
     'pytest-cov==2.3.0',
     'sphinx_rtd_theme==0.1.10a0',
     'twine',
-    'trols-stats==1.0.1',
+    'trols-stats==1.0.2',
     'Sphinx==1.4.5',
 ]
 
