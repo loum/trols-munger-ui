@@ -19,7 +19,7 @@ PACKAGES = [
 
 SETUP_KWARGS = {
     'name': 'trols-munger-ui',
-    'version': '1.0.1',
+    'version': '1.0.2',
     'description': 'TROLS Munger UI',
     'author': 'Lou Markovski',
     'author_email': 'lou.markovski@gmail.com',
