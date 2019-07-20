@@ -1,24 +1,33 @@
 """Setup script for the TROLS Stats project.
 """
+import os
 import setuptools
 
+PROJECT_NAME = os.path.basename(os.path.abspath(os.curdir))
 
-PACKAGES = [
-    'configa==1.0.0',
-    'filer==1.0.0',
-    'flask==0.12',
-    'logga==1.0.0',
-    'pylint==1.6.4',
-    'pytest==2.9.2',
-    'pytest-cov==2.3.0',
-    'sphinx_rtd_theme==0.1.10a0',
-    'twine',
-    'trols-stats==1.0.2',
-    'Sphinx==1.4.5',
+PROD_PACKAGES = [
+    'configa>=1.0.0',
+    'filer>=1.0.0',
+    'flask>=1.1.1',
+    'trols-stats>=1.0.2',
 ]
 
+DEV_PACKAGES = [
+    'pylint',
+    'pytest',
+    'pytest-cov',
+    'sphinx_rtd_theme',
+    'twine',
+    'Sphinx',
+]
+
+PACKAGES = list(PROD_PACKAGES)
+if (os.environ.get('APP_ENV') is not None and
+        'dev' in os.environ.get('APP_ENV')):
+    PACKAGES += DEV_PACKAGES
+
 SETUP_KWARGS = {
-    'name': 'trols-munger-ui',
+    'name': PROJECT_NAME,
     'version': '1.0.2',
     'description': 'TROLS Munger UI',
     'author': 'Lou Markovski',

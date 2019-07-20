@@ -2,11 +2,21 @@
 
 """
 import os
+import sys
 import flask
-from logga import log
+import logging
 
 import trols_stats
 
+
+ROOT = logging.getLogger()
+ROOT.setLevel(logging.INFO)
+
+HANDLER = logging.StreamHandler(sys.stdout)
+HANDLER.setLevel(logging.INFO)
+FORMATTER = logging.Formatter('%(asctime)s:%(name)s:%(levelname)s: %(message)s')
+HANDLER.setFormatter(FORMATTER)
+ROOT.addHandler(HANDLER)
 
 app = flask.Flask(__name__)
 if os.environ.get('TROLSUI_CONF'):
@@ -17,14 +27,10 @@ import trols_munger_ui.views
 
 MODEL = None
 if app.config.get('SHELVE') is not None:
-    log.info('SHELVE: %s', app.config.get('SHELVE'))
-    # session = trols_stats.DBSession(shelve=app.config.get('SHELVE'))
-    # session.connect()
-    log.info('Reading TROLS stats in memory ...')
-    # db = session.connection['trols']
+    logging.info('SHELVE: %s', app.config.get('SHELVE'))
+    logging.info('Reading TROLS stats in memory ...')
     MODEL = trols_stats.DataModel(shelve=app.config.get('SHELVE'))
-    log.info('TROLS stats read OK.')
-    # session.close()
+    logging.info('TROLS stats read OK.')
 
 
 def get_db():

@@ -2,7 +2,7 @@
 
 """
 import urllib.parse
-from logga import log
+import logging
 
 
 def query_terms_to_dict(request, key_preamble=None):
@@ -30,9 +30,9 @@ def query_terms_to_dict(request, key_preamble=None):
         values for each name
 
     """
-    log.debug('Parsing query terms request: %s', request)
+    logging.debug('Parsing query terms request: %s', request)
 
-    log.debug('Unquoted: %s', urllib.parse.unquote(request))
+    logging.debug('Unquoted: %s', urllib.parse.unquote(request))
 
     parser = urllib.parse.urlparse(request)
     query_strings = urllib.parse.parse_qs(parser.query)
@@ -43,6 +43,6 @@ def query_terms_to_dict(request, key_preamble=None):
         for key, value in tmp_query_strings.items():
             query_strings['%s%s' % (key_preamble, key)] = value
 
-    log.debug('Parsed query strings: %s', query_strings)
+    logging.debug('Parsed query strings: %s', query_strings)
 
     return query_strings
