@@ -102,8 +102,7 @@ def munger():
     if terms.get('json') is not None and terms.get('json')[0] == 'true':
         response = flask.json.jsonify(_stats)
     else:
-        response = flask.render_template('munger/layout.html',
-                                         result=_stats)
+        response = flask.render_template('munger/layout.html', result=_stats)
 
     return response
 

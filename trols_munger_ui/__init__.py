@@ -12,11 +12,12 @@ import trols_stats
 ROOT = logging.getLogger()
 ROOT.setLevel(logging.INFO)
 
-HANDLER = logging.StreamHandler(sys.stdout)
-HANDLER.setLevel(logging.INFO)
-FORMATTER = logging.Formatter('%(asctime)s:%(name)s:%(levelname)s: %(message)s')
-HANDLER.setFormatter(FORMATTER)
-ROOT.addHandler(HANDLER)
+if not ROOT.hasHandlers():
+    HANDLER = logging.StreamHandler(sys.stdout)
+    HANDLER.setLevel(logging.INFO)
+    FORMATTER = logging.Formatter('%(asctime)s:%(name)s:%(levelname)s: %(message)s')
+    HANDLER.setFormatter(FORMATTER)
+    ROOT.addHandler(HANDLER)
 
 app = flask.Flask(__name__)
 if os.environ.get('TROLSUI_CONF'):
